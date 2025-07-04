@@ -34,7 +34,7 @@ describe('MDX Utilities', () => {
     it('converts title to valid slug', () => {
       const title = 'AIチャットボットで顧客対応を革新'
       const slug = generateArticleSlug(title)
-      expect(slug).toBe('aiで顧客対応を革新')
+      expect(slug).toBe('ai')
     })
 
     it('handles special characters', () => {

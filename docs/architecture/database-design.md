@@ -11,12 +11,14 @@ AIスペシャリスト.comのデータベース設計について、ER図、テ
 ## データベース概要
 
 ### 技術選択
+
 - **RDBMS**: PostgreSQL 14+
 - **ORM**: Prisma (v0.1) → TypeORM (Year-1)
 - **拡張機能**: pgvector (ベクトル検索用)
 - **バックアップ**: AWS RDS自動バックアップ + S3
 
 ### フェーズ別構成
+
 ```
 v0.1 PoC:    PostgreSQL + Prisma (単一DB)
 v1.0 β:      PostgreSQL + pgvector + Redis Cache
@@ -26,6 +28,7 @@ Year-1:      Aurora PostgreSQL + Read Replica + Microservices
 ## ER図
 
 ### 全体概要
+
 ```
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
 │    Users    │    │  Questions  │    │   Answers   │
@@ -58,6 +61,7 @@ Year-1:      Aurora PostgreSQL + Read Replica + Microservices
 ### 1. ユーザー管理
 
 #### users テーブル
+
 ```sql
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -89,17 +93,18 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_users_updated_at 
-    BEFORE UPDATE ON users 
+CREATE TRIGGER update_users_updated_at
+    BEFORE UPDATE ON users
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ```
 
 #### user_profiles テーブル
+
 ```sql
 CREATE TABLE user_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Specialist specific fields
     specialties TEXT[], -- ['AI', 'Machine Learning', 'Web Development']
     experience_years INTEGER,
@@ -110,12 +115,12 @@ CREATE TABLE user_profiles (
     certifications JSONB,
     skills JSONB,
     availability_status VARCHAR(20) DEFAULT 'available', -- available, busy, offline
-    
+
     -- Location & Contact
     location VARCHAR(100),
     timezone VARCHAR(50),
     languages TEXT[] DEFAULT ARRAY['Japanese'],
-    
+
     -- Statistics (denormalized for performance)
     total_questions INTEGER DEFAULT 0,
     total_answers INTEGER DEFAULT 0,
@@ -123,23 +128,23 @@ CREATE TABLE user_profiles (
     total_upvotes INTEGER DEFAULT 0,
     reputation_score INTEGER DEFAULT 0,
     response_time_avg INTEGER, -- in minutes
-    
+
     -- SEO & Discovery
     slug VARCHAR(100) UNIQUE,
     meta_title VARCHAR(60),
     meta_description VARCHAR(160),
-    
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     -- Constraints
     CONSTRAINT valid_hourly_rate CHECK (hourly_rate IS NULL OR hourly_rate >= 1000),
     CONSTRAINT valid_experience CHECK (experience_years IS NULL OR experience_years >= 0),
     CONSTRAINT valid_reputation CHECK (reputation_score >= 0)
 );
 
-CREATE TRIGGER update_user_profiles_updated_at 
-    BEFORE UPDATE ON user_profiles 
+CREATE TRIGGER update_user_profiles_updated_at
+    BEFORE UPDATE ON user_profiles
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Indexes
@@ -153,49 +158,50 @@ CREATE INDEX idx_user_profiles_slug ON user_profiles(slug) WHERE slug IS NOT NUL
 ### 2. 質問・回答システム
 
 #### questions テーブル
+
 ```sql
 CREATE TABLE questions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(200) NOT NULL,
     content TEXT NOT NULL,
     slug VARCHAR(250) UNIQUE NOT NULL,
-    
+
     -- Metadata
     author_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     status question_status DEFAULT 'open',
     priority question_priority DEFAULT 'normal',
-    
+
     -- Content & SEO
     excerpt TEXT, -- Auto-generated from content
     meta_title VARCHAR(60),
     meta_description VARCHAR(160),
-    
+
     -- Business Logic
     budget_min INTEGER,
     budget_max INTEGER,
     deadline TIMESTAMP,
     accepted_answer_id UUID, -- Self-reference to answers table
-    
+
     -- Analytics (denormalized)
     view_count INTEGER DEFAULT 0,
     answer_count INTEGER DEFAULT 0,
     upvote_count INTEGER DEFAULT 0,
     downvote_count INTEGER DEFAULT 0,
-    
+
     -- AI/Search Enhancement
     content_vector VECTOR(1536), -- OpenAI embeddings
     search_vector TSVECTOR, -- Full-text search
     language VARCHAR(10) DEFAULT 'ja',
-    
+
     -- Timestamps
     last_activity_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     closed_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     -- Constraints
     CONSTRAINT valid_budget CHECK (
-        (budget_min IS NULL AND budget_max IS NULL) OR 
+        (budget_min IS NULL AND budget_max IS NULL) OR
         (budget_min IS NOT NULL AND budget_max IS NOT NULL AND budget_min <= budget_max)
     ),
     CONSTRAINT valid_deadline CHECK (deadline IS NULL OR deadline > created_at)
@@ -206,15 +212,15 @@ CREATE TYPE question_status AS ENUM ('open', 'answered', 'closed', 'archived');
 CREATE TYPE question_priority AS ENUM ('low', 'normal', 'high', 'urgent');
 
 -- Triggers
-CREATE TRIGGER update_questions_updated_at 
-    BEFORE UPDATE ON questions 
+CREATE TRIGGER update_questions_updated_at
+    BEFORE UPDATE ON questions
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Auto-generate search_vector
 CREATE OR REPLACE FUNCTION update_question_search_vector()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.search_vector := to_tsvector('japanese', 
+    NEW.search_vector := to_tsvector('japanese',
         COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.content, '')
     );
     RETURN NEW;
@@ -237,33 +243,34 @@ CREATE INDEX idx_questions_view_count ON questions(view_count DESC);
 ```
 
 #### answers テーブル
+
 ```sql
 CREATE TABLE answers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
     author_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Content
     content TEXT NOT NULL,
     content_html TEXT, -- Rendered HTML for performance
-    
+
     -- Business Logic
     is_accepted BOOLEAN DEFAULT FALSE,
     estimated_hours INTEGER,
     proposed_rate INTEGER, -- Specialist's proposed rate
-    
+
     -- Analytics
     upvote_count INTEGER DEFAULT 0,
     downvote_count INTEGER DEFAULT 0,
-    
+
     -- AI Enhancement
     content_vector VECTOR(1536),
-    
+
     -- Timestamps
     accepted_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     -- Constraints
     CONSTRAINT valid_proposed_rate CHECK (proposed_rate IS NULL OR proposed_rate >= 1000),
     CONSTRAINT valid_estimated_hours CHECK (estimated_hours IS NULL OR estimated_hours > 0),
@@ -271,8 +278,8 @@ CREATE TABLE answers (
 );
 
 -- Triggers
-CREATE TRIGGER update_answers_updated_at 
-    BEFORE UPDATE ON answers 
+CREATE TRIGGER update_answers_updated_at
+    BEFORE UPDATE ON answers
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Auto-update question stats when answer is added/removed
@@ -280,19 +287,19 @@ CREATE OR REPLACE FUNCTION update_question_answer_count()
 RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        UPDATE questions SET 
+        UPDATE questions SET
             answer_count = answer_count + 1,
             last_activity_at = CURRENT_TIMESTAMP
         WHERE id = NEW.question_id;
         RETURN NEW;
     ELSIF TG_OP = 'DELETE' THEN
-        UPDATE questions SET 
+        UPDATE questions SET
             answer_count = answer_count - 1,
             last_activity_at = CURRENT_TIMESTAMP
         WHERE id = OLD.question_id;
         RETURN OLD;
     ELSIF TG_OP = 'UPDATE' AND OLD.is_accepted != NEW.is_accepted THEN
-        UPDATE questions SET 
+        UPDATE questions SET
             accepted_answer_id = CASE WHEN NEW.is_accepted THEN NEW.id ELSE NULL END,
             status = CASE WHEN NEW.is_accepted THEN 'answered' ELSE 'open' END,
             last_activity_at = CURRENT_TIMESTAMP
@@ -318,6 +325,7 @@ CREATE INDEX idx_answers_content_vector ON answers USING ivfflat (content_vector
 ### 3. タグ・カテゴリ
 
 #### tags テーブル
+
 ```sql
 CREATE TABLE tags (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -326,36 +334,36 @@ CREATE TABLE tags (
     description TEXT,
     color VARCHAR(7), -- Hex color code
     icon_name VARCHAR(50),
-    
+
     -- Hierarchy support
     parent_id UUID REFERENCES tags(id) ON DELETE SET NULL,
     path TEXT, -- Materialized path: /tech/frontend/react
     level INTEGER DEFAULT 0,
-    
+
     -- Analytics
     usage_count INTEGER DEFAULT 0,
     question_count INTEGER DEFAULT 0,
-    
+
     -- SEO
     meta_title VARCHAR(60),
     meta_description VARCHAR(160),
-    
+
     -- Admin
     is_active BOOLEAN DEFAULT TRUE,
     is_featured BOOLEAN DEFAULT FALSE,
     created_by UUID REFERENCES users(id),
-    
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     -- Constraints
     CONSTRAINT valid_level CHECK (level >= 0 AND level <= 5),
     CONSTRAINT no_self_parent CHECK (parent_id != id)
 );
 
 -- Triggers
-CREATE TRIGGER update_tags_updated_at 
-    BEFORE UPDATE ON tags 
+CREATE TRIGGER update_tags_updated_at
+    BEFORE UPDATE ON tags
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Indexes
@@ -368,12 +376,13 @@ CREATE INDEX idx_tags_is_featured ON tags(is_featured) WHERE is_featured = TRUE;
 ```
 
 #### question_tags テーブル (Many-to-Many)
+
 ```sql
 CREATE TABLE question_tags (
     question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
     tag_id UUID NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     PRIMARY KEY (question_id, tag_id)
 );
 
@@ -382,13 +391,13 @@ CREATE OR REPLACE FUNCTION update_tag_usage_count()
 RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        UPDATE tags SET 
+        UPDATE tags SET
             usage_count = usage_count + 1,
             question_count = question_count + 1
         WHERE id = NEW.tag_id;
         RETURN NEW;
     ELSIF TG_OP = 'DELETE' THEN
-        UPDATE tags SET 
+        UPDATE tags SET
             usage_count = usage_count - 1,
             question_count = question_count - 1
         WHERE id = OLD.tag_id;
@@ -410,20 +419,21 @@ CREATE INDEX idx_question_tags_tag_id ON question_tags(tag_id);
 ### 4. 投票・評価システム
 
 #### votes テーブル
+
 ```sql
 CREATE TABLE votes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Polymorphic reference (question or answer)
     votable_type VARCHAR(20) NOT NULL, -- 'question' or 'answer'
     votable_id UUID NOT NULL,
-    
+
     vote_type vote_type NOT NULL,
-    
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     -- One vote per user per item
     UNIQUE(user_id, votable_type, votable_id)
 );
@@ -487,38 +497,39 @@ CREATE UNIQUE INDEX idx_votes_unique_user_vote ON votes(user_id, votable_type, v
 ### 5. サブスクリプション・決済
 
 #### subscriptions テーブル
+
 ```sql
 CREATE TABLE subscriptions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Stripe Integration
     stripe_subscription_id VARCHAR(255) UNIQUE NOT NULL,
     stripe_customer_id VARCHAR(255) NOT NULL,
     stripe_price_id VARCHAR(255) NOT NULL,
-    
+
     -- Subscription Details
     plan_type subscription_plan NOT NULL,
     status subscription_status NOT NULL,
-    
+
     -- Pricing
     amount INTEGER NOT NULL, -- in JPY cents
     currency VARCHAR(3) DEFAULT 'JPY',
-    
+
     -- Billing Cycle
     current_period_start TIMESTAMP NOT NULL,
     current_period_end TIMESTAMP NOT NULL,
     trial_start TIMESTAMP,
     trial_end TIMESTAMP,
-    
+
     -- Cancellation
     cancel_at_period_end BOOLEAN DEFAULT FALSE,
     canceled_at TIMESTAMP,
     cancellation_reason TEXT,
-    
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     -- Only one active subscription per user
     UNIQUE(user_id) WHERE status = 'active'
 );
@@ -528,8 +539,8 @@ CREATE TYPE subscription_plan AS ENUM ('specialist_monthly', 'specialist_yearly'
 CREATE TYPE subscription_status AS ENUM ('active', 'past_due', 'canceled', 'unpaid', 'trialing');
 
 -- Triggers
-CREATE TRIGGER update_subscriptions_updated_at 
-    BEFORE UPDATE ON subscriptions 
+CREATE TRIGGER update_subscriptions_updated_at
+    BEFORE UPDATE ON subscriptions
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Indexes
@@ -540,28 +551,29 @@ CREATE INDEX idx_subscriptions_current_period_end ON subscriptions(current_perio
 ```
 
 #### payments テーブル
+
 ```sql
 CREATE TABLE payments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     subscription_id UUID REFERENCES subscriptions(id) ON DELETE SET NULL,
-    
+
     -- Stripe Integration
     stripe_payment_intent_id VARCHAR(255) UNIQUE,
     stripe_charge_id VARCHAR(255),
     stripe_invoice_id VARCHAR(255),
-    
+
     -- Payment Details
     amount INTEGER NOT NULL,
     currency VARCHAR(3) DEFAULT 'JPY',
     status payment_status NOT NULL,
     payment_method_type VARCHAR(50), -- 'card', 'bank_transfer', etc.
-    
+
     -- Metadata
     description TEXT,
     failure_reason TEXT,
     receipt_url VARCHAR(500),
-    
+
     -- Timestamps
     paid_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -571,8 +583,8 @@ CREATE TABLE payments (
 CREATE TYPE payment_status AS ENUM ('pending', 'succeeded', 'failed', 'canceled', 'refunded');
 
 -- Triggers
-CREATE TRIGGER update_payments_updated_at 
-    BEFORE UPDATE ON payments 
+CREATE TRIGGER update_payments_updated_at
+    BEFORE UPDATE ON payments
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Indexes
@@ -585,42 +597,43 @@ CREATE INDEX idx_payments_created_at ON payments(created_at DESC);
 ### 6. コンテンツ管理
 
 #### cms_articles テーブル (インタビューコンテンツ)
+
 ```sql
 CREATE TABLE cms_articles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    
+
     -- Content
     title VARCHAR(200) NOT NULL,
     slug VARCHAR(250) UNIQUE NOT NULL,
     excerpt TEXT,
     content TEXT NOT NULL,
     content_html TEXT, -- Rendered HTML
-    
+
     -- Metadata
     author_id UUID REFERENCES users(id),
     featured_image_url VARCHAR(500),
-    
+
     -- SEO
     meta_title VARCHAR(60),
     meta_description VARCHAR(160),
     canonical_url VARCHAR(500),
-    
+
     -- Publishing
     status article_status DEFAULT 'draft',
     published_at TIMESTAMP,
-    
+
     -- Analytics
     view_count INTEGER DEFAULT 0,
     reading_time INTEGER, -- Estimated reading time in minutes
-    
+
     -- AI Enhancement
     content_vector VECTOR(1536),
     search_vector TSVECTOR,
-    
+
     -- External CMS Integration
     cms_id VARCHAR(100), -- Strapi/microCMS ID
     cms_last_sync TIMESTAMP,
-    
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -628,17 +641,17 @@ CREATE TABLE cms_articles (
 CREATE TYPE article_status AS ENUM ('draft', 'published', 'archived');
 
 -- Triggers
-CREATE TRIGGER update_cms_articles_updated_at 
-    BEFORE UPDATE ON cms_articles 
+CREATE TRIGGER update_cms_articles_updated_at
+    BEFORE UPDATE ON cms_articles
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Auto-generate search vector
 CREATE OR REPLACE FUNCTION update_article_search_vector()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.search_vector := to_tsvector('japanese', 
-        COALESCE(NEW.title, '') || ' ' || 
-        COALESCE(NEW.excerpt, '') || ' ' || 
+    NEW.search_vector := to_tsvector('japanese',
+        COALESCE(NEW.title, '') || ' ' ||
+        COALESCE(NEW.excerpt, '') || ' ' ||
         COALESCE(NEW.content, '')
     );
     RETURN NEW;
@@ -659,12 +672,13 @@ CREATE INDEX idx_cms_articles_view_count ON cms_articles(view_count DESC);
 ```
 
 #### article_tags テーブル
+
 ```sql
 CREATE TABLE article_tags (
     article_id UUID NOT NULL REFERENCES cms_articles(id) ON DELETE CASCADE,
     tag_id UUID NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     PRIMARY KEY (article_id, tag_id)
 );
 
@@ -676,6 +690,7 @@ CREATE INDEX idx_article_tags_tag_id ON article_tags(tag_id);
 ## パフォーマンス最適化
 
 ### インデックス戦略
+
 ```sql
 -- 複合インデックス (よく一緒に使われるカラム)
 CREATE INDEX idx_questions_status_created_at ON questions(status, created_at DESC);
@@ -693,11 +708,12 @@ CREATE INDEX idx_tags_name_lower ON tags(LOWER(name));
 ```
 
 ### クエリ最適化例
+
 ```sql
 -- 人気の質問取得 (複合インデックス使用)
 SELECT q.id, q.title, q.view_count, q.answer_count
 FROM questions q
-WHERE q.status = 'open' 
+WHERE q.status = 'open'
 ORDER BY q.view_count DESC, q.created_at DESC
 LIMIT 20;
 
@@ -705,7 +721,7 @@ LIMIT 20;
 SELECT up.user_id, u.name, up.specialties, up.reputation_score
 FROM user_profiles up
 JOIN users u ON u.id = up.user_id
-WHERE u.role = 'specialist' 
+WHERE u.role = 'specialist'
   AND up.specialties && ARRAY['AI', 'Machine Learning']
   AND up.availability_status = 'available'
 ORDER BY up.reputation_score DESC
@@ -723,12 +739,13 @@ LIMIT 10;
 ## データ整合性
 
 ### 制約・バリデーション
+
 ```sql
 -- ビジネスルール制約
 ALTER TABLE user_profiles ADD CONSTRAINT check_specialist_fields
 CHECK (
-    (user_id IN (SELECT id FROM users WHERE role = 'specialist') AND 
-     specialties IS NOT NULL AND 
+    (user_id IN (SELECT id FROM users WHERE role = 'specialist') AND
+     specialties IS NOT NULL AND
      array_length(specialties, 1) > 0) OR
     (user_id IN (SELECT id FROM users WHERE role = 'client'))
 );
@@ -745,6 +762,7 @@ CHECK (char_length(trim(content)) >= 20);
 ```
 
 ### 統計情報同期
+
 ```sql
 -- 統計情報を定期的に更新するプロシージャ
 CREATE OR REPLACE FUNCTION sync_user_statistics()
@@ -753,27 +771,27 @@ BEGIN
     -- User統計情報更新
     UPDATE user_profiles SET
         total_questions = (
-            SELECT COUNT(*) FROM questions 
+            SELECT COUNT(*) FROM questions
             WHERE author_id = user_profiles.user_id
         ),
         total_answers = (
-            SELECT COUNT(*) FROM answers 
+            SELECT COUNT(*) FROM answers
             WHERE author_id = user_profiles.user_id
         ),
         accepted_answers = (
-            SELECT COUNT(*) FROM answers 
+            SELECT COUNT(*) FROM answers
             WHERE author_id = user_profiles.user_id AND is_accepted = TRUE
         ),
         total_upvotes = (
-            SELECT COALESCE(SUM(upvote_count), 0) FROM answers 
+            SELECT COALESCE(SUM(upvote_count), 0) FROM answers
             WHERE author_id = user_profiles.user_id
         );
-        
+
     -- Reputation計算
     UPDATE user_profiles SET
         reputation_score = (
-            accepted_answers * 15 + 
-            total_upvotes * 2 + 
+            accepted_answers * 15 +
+            total_upvotes * 2 +
             total_answers * 1
         );
 END;
@@ -786,6 +804,7 @@ $$ LANGUAGE plpgsql;
 ## バックアップ・復旧
 
 ### バックアップ戦略
+
 ```sql
 -- 重要テーブルの優先度
 -- Priority 1 (Critical): users, user_profiles, subscriptions, payments
@@ -801,6 +820,7 @@ $$ LANGUAGE plpgsql;
 ```
 
 ### 災害復旧手順
+
 ```bash
 # 1. 最新のBaseBackupから復元
 pg_basebackup -h source-server -D /var/lib/postgresql/data -U replication -W
@@ -818,6 +838,7 @@ psql -c "SELECT COUNT(*) FROM questions;"
 ## マイグレーション計画
 
 ### v0.1 → v1.0 移行
+
 ```sql
 -- pgvector拡張機能追加
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -828,17 +849,18 @@ ALTER TABLE answers ADD COLUMN content_vector VECTOR(1536);
 ALTER TABLE cms_articles ADD COLUMN content_vector VECTOR(1536);
 
 -- インデックス作成
-CREATE INDEX CONCURRENTLY idx_questions_content_vector 
+CREATE INDEX CONCURRENTLY idx_questions_content_vector
 ON questions USING ivfflat (content_vector vector_cosine_ops);
 ```
 
 ### v1.0 → Year-1 移行 (Microservices)
+
 ```sql
 -- 段階的なデータベース分離
 -- 1. Auth Service DB
 CREATE DATABASE auth_service;
 
--- 2. Content Service DB  
+-- 2. Content Service DB
 CREATE DATABASE content_service;
 
 -- 3. Search Service DB

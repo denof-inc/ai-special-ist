@@ -1,9 +1,10 @@
-import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
-import { MDXRemote } from 'next-mdx-remote/rsc'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { formatDate } from '@/lib/mdx'
 import { notFound } from 'next/navigation'
+import { MDXRemote } from 'next-mdx-remote/rsc'
+
+import { Button } from '@/components/ui/button'
+import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
+import { formatDate } from '@/lib/mdx'
 
 interface Props {
   params: { slug: string }
@@ -11,14 +12,14 @@ interface Props {
 
 export default async function InterviewArticlePage({ params }: Props) {
   const article = getInterviewArticleBySlug(params.slug)
-  
+
   if (!article) {
     notFound()
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="mx-auto max-w-4xl">
         <div className="mb-8">
           <Link href="/interview" className="text-primary hover:underline">
             ← インタビュー一覧に戻る
@@ -27,34 +28,34 @@ export default async function InterviewArticlePage({ params }: Props) {
 
         <article className="prose prose-lg max-w-none">
           <header className="mb-12">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
                 {article.industry}
               </span>
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm text-muted-foreground">
                 {formatDate(article.date)}
               </span>
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm text-muted-foreground">
                 読了時間: {article.readingTime}分
               </span>
             </div>
-            
-            <h1 className="text-4xl font-bold mb-6">{article.title}</h1>
-            
-            <div className="flex items-center gap-4 mb-6">
-              <span className="font-medium text-lg">{article.author}</span>
+
+            <h1 className="mb-6 text-4xl font-bold">{article.title}</h1>
+
+            <div className="mb-6 flex items-center gap-4">
+              <span className="text-lg font-medium">{article.author}</span>
               <span className="text-muted-foreground">@ {article.company}</span>
             </div>
-            
-            <p className="text-xl text-muted-foreground mb-8">
+
+            <p className="mb-8 text-xl text-muted-foreground">
               {article.excerpt}
             </p>
-            
-            <div className="flex flex-wrap gap-2 mb-8">
-              {article.tags.map((tag) => (
+
+            <div className="mb-8 flex flex-wrap gap-2">
+              {article.tags.map(tag => (
                 <span
                   key={tag}
-                  className="bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm"
+                  className="rounded-full bg-secondary px-3 py-1 text-sm text-secondary-foreground"
                 >
                   {tag}
                 </span>
@@ -66,7 +67,7 @@ export default async function InterviewArticlePage({ params }: Props) {
                 <img
                   src={article.featuredImage}
                   alt={article.title}
-                  className="w-full h-64 object-cover rounded-lg"
+                  className="h-64 w-full rounded-lg object-cover"
                 />
               </div>
             )}
@@ -77,29 +78,27 @@ export default async function InterviewArticlePage({ params }: Props) {
           </div>
         </article>
 
-        <div className="mt-16 p-8 bg-muted/50 rounded-lg">
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="mt-16 rounded-lg bg-muted/50 p-8">
+          <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <h3 className="text-xl font-bold mb-4">この記事について詳しく相談したい</h3>
-              <p className="text-muted-foreground mb-4">
+              <h3 className="mb-4 text-xl font-bold">
+                この記事について詳しく相談したい
+              </h3>
+              <p className="mb-4 text-muted-foreground">
                 記事の内容についてより詳しく知りたい方は、専門家による無料相談をご活用ください。
               </p>
               <Button asChild className="interview-cta">
-                <Link href="/qa">
-                  無料相談を始める
-                </Link>
+                <Link href="/qa">無料相談を始める</Link>
               </Button>
             </div>
-            
+
             <div>
-              <h3 className="text-xl font-bold mb-4">他のインタビュー記事</h3>
-              <p className="text-muted-foreground mb-4">
+              <h3 className="mb-4 text-xl font-bold">他のインタビュー記事</h3>
+              <p className="mb-4 text-muted-foreground">
                 様々な業界でのAI活用事例をご紹介しています。
               </p>
               <Button asChild variant="outline">
-                <Link href="/interview">
-                  インタビュー一覧を見る
-                </Link>
+                <Link href="/interview">インタビュー一覧を見る</Link>
               </Button>
             </div>
           </div>
@@ -111,14 +110,14 @@ export default async function InterviewArticlePage({ params }: Props) {
 
 export async function generateStaticParams() {
   const articles = getAllInterviewArticles()
-  return articles.map((article) => ({
+  return articles.map(article => ({
     slug: article.slug,
   }))
 }
 
 export async function generateMetadata({ params }: Props) {
   const article = getInterviewArticleBySlug(params.slug)
-  
+
   if (!article) {
     return {
       title: '記事が見つかりません',

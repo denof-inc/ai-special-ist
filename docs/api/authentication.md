@@ -11,6 +11,7 @@ AIスペシャリスト.comの認証・認可システムについて、実装�
 ## 認証アーキテクチャ
 
 ### システム全体図
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend       │    │   Database      │
@@ -29,6 +30,7 @@ AIスペシャリスト.comの認証・認可システムについて、実装�
 ## 認証フロー
 
 ### 1. ユーザー登録フロー
+
 ```
 1. ユーザー情報入力
    ├── Email形式検証
@@ -55,6 +57,7 @@ AIスペシャリスト.comの認証・認可システムについて、実装�
 ```
 
 ### 2. ログインフロー
+
 ```
 1. 認証情報入力
    ├── Email/Password
@@ -82,6 +85,7 @@ AIスペシャリスト.comの認証・認可システムについて、実装�
 ## JWT設計
 
 ### Token構造
+
 ```typescript
 // Access Token
 {
@@ -116,40 +120,41 @@ AIスペシャリスト.comの認証・認可システムについて、実装�
 ```
 
 ### Token管理戦略
+
 ```typescript
 // フロントエンド: Token Storage
 class AuthTokenManager {
-  private accessToken: string | null = null;
-  private refreshToken: string | null = null;
+  private accessToken: string | null = null
+  private refreshToken: string | null = null
 
   setTokens(access: string, refresh: string) {
-    this.accessToken = access;
-    this.refreshToken = refresh;
-    
+    this.accessToken = access
+    this.refreshToken = refresh
+
     // HttpOnly Cookieに保存
-    document.cookie = `refresh_token=${refresh}; HttpOnly; Secure; SameSite=Strict`;
+    document.cookie = `refresh_token=${refresh}; HttpOnly; Secure; SameSite=Strict`
   }
 
   async getValidToken(): Promise<string | null> {
     if (!this.accessToken || this.isTokenExpired(this.accessToken)) {
-      return await this.refreshAccessToken();
+      return await this.refreshAccessToken()
     }
-    return this.accessToken;
+    return this.accessToken
   }
 
   private async refreshAccessToken(): Promise<string | null> {
     try {
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
-        credentials: 'include' // Cookieを送信
-      });
-      
-      const { access_token } = await response.json();
-      this.accessToken = access_token;
-      return access_token;
+        credentials: 'include', // Cookieを送信
+      })
+
+      const { access_token } = await response.json()
+      this.accessToken = access_token
+      return access_token
     } catch (error) {
-      this.logout();
-      return null;
+      this.logout()
+      return null
     }
   }
 }
@@ -158,12 +163,13 @@ class AuthTokenManager {
 ## 認可システム
 
 ### Role-Based Access Control (RBAC)
+
 ```typescript
 // User Roles
 enum UserRole {
-  CLIENT = 'client',           // 質問者
-  SPECIALIST = 'specialist',   // 専門家
-  ADMIN = 'admin'             // 管理者
+  CLIENT = 'client', // 質問者
+  SPECIALIST = 'specialist', // 専門家
+  ADMIN = 'admin', // 管理者
 }
 
 // Permissions
@@ -173,26 +179,26 @@ enum Permission {
   CREATE_QUESTIONS = 'create:questions',
   UPDATE_OWN_QUESTIONS = 'update:own_questions',
   DELETE_OWN_QUESTIONS = 'delete:own_questions',
-  
+
   // Answer管理
   READ_ANSWERS = 'read:answers',
   CREATE_ANSWERS = 'create:answers',
   UPDATE_OWN_ANSWERS = 'update:own_answers',
   DELETE_OWN_ANSWERS = 'delete:own_answers',
   ACCEPT_ANSWERS = 'accept:answers',
-  
+
   // User管理
   READ_PROFILES = 'read:profiles',
   UPDATE_OWN_PROFILE = 'update:own_profile',
   READ_ALL_USERS = 'read:all_users',
-  
+
   // Subscription管理
   MANAGE_SUBSCRIPTION = 'manage:subscription',
-  
+
   // Admin権限
   ADMIN_USERS = 'admin:users',
   ADMIN_CONTENT = 'admin:content',
-  ADMIN_SYSTEM = 'admin:system'
+  ADMIN_SYSTEM = 'admin:system',
 }
 
 // Role-Permission Mapping
@@ -205,9 +211,9 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.READ_ANSWERS,
     Permission.ACCEPT_ANSWERS,
     Permission.READ_PROFILES,
-    Permission.UPDATE_OWN_PROFILE
+    Permission.UPDATE_OWN_PROFILE,
   ],
-  
+
   [UserRole.SPECIALIST]: [
     Permission.READ_QUESTIONS,
     Permission.READ_ANSWERS,
@@ -216,55 +222,59 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.DELETE_OWN_ANSWERS,
     Permission.READ_PROFILES,
     Permission.UPDATE_OWN_PROFILE,
-    Permission.MANAGE_SUBSCRIPTION
+    Permission.MANAGE_SUBSCRIPTION,
   ],
-  
+
   [UserRole.ADMIN]: [
-    ...Object.values(Permission) // All permissions
-  ]
-};
+    ...Object.values(Permission), // All permissions
+  ],
+}
 ```
 
 ### Guards実装例
+
 ```typescript
 // Next.js API Route Guard
-export function withAuth(handler: NextApiHandler, requiredPermissions?: Permission[]) {
+export function withAuth(
+  handler: NextApiHandler,
+  requiredPermissions?: Permission[]
+) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       // JWT Token検証
-      const token = extractToken(req);
+      const token = extractToken(req)
       if (!token) {
-        return res.status(401).json({ error: 'Authentication required' });
+        return res.status(401).json({ error: 'Authentication required' })
       }
 
-      const payload = jwt.verify(token, JWT_SECRET) as JWTPayload;
-      
+      const payload = jwt.verify(token, JWT_SECRET) as JWTPayload
+
       // User存在確認
-      const user = await getUserById(payload.sub);
+      const user = await getUserById(payload.sub)
       if (!user || !user.is_active) {
-        return res.status(401).json({ error: 'Invalid user' });
+        return res.status(401).json({ error: 'Invalid user' })
       }
 
       // Permission確認
       if (requiredPermissions) {
-        const userPermissions = ROLE_PERMISSIONS[user.role];
-        const hasPermission = requiredPermissions.every(
-          permission => userPermissions.includes(permission)
-        );
-        
+        const userPermissions = ROLE_PERMISSIONS[user.role]
+        const hasPermission = requiredPermissions.every(permission =>
+          userPermissions.includes(permission)
+        )
+
         if (!hasPermission) {
-          return res.status(403).json({ error: 'Insufficient permissions' });
+          return res.status(403).json({ error: 'Insufficient permissions' })
         }
       }
 
       // リクエストにuser情報追加
-      (req as any).user = user;
-      
-      return handler(req, res);
+      ;(req as any).user = user
+
+      return handler(req, res)
     } catch (error) {
-      return res.status(401).json({ error: 'Invalid token' });
+      return res.status(401).json({ error: 'Invalid token' })
     }
-  };
+  }
 }
 
 // 使用例
@@ -273,12 +283,13 @@ export default withAuth(
     // Protected route logic
   },
   [Permission.CREATE_ANSWERS]
-);
+)
 ```
 
 ## セキュリティ設計
 
 ### Password Security
+
 ```typescript
 // Password要件
 const PASSWORD_REQUIREMENTS = {
@@ -288,145 +299,156 @@ const PASSWORD_REQUIREMENTS = {
   requireLowercase: true,
   requireNumbers: true,
   requireSpecialChars: true,
-  preventCommonPasswords: true
-};
+  preventCommonPasswords: true,
+}
 
 // Password Hash化
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs'
 
 export class PasswordService {
-  private static readonly SALT_ROUNDS = 12;
+  private static readonly SALT_ROUNDS = 12
 
   static async hash(password: string): Promise<string> {
-    return await bcrypt.hash(password, this.SALT_ROUNDS);
+    return await bcrypt.hash(password, this.SALT_ROUNDS)
   }
 
   static async verify(password: string, hash: string): Promise<boolean> {
-    return await bcrypt.compare(password, hash);
+    return await bcrypt.compare(password, hash)
   }
 
   static validate(password: string): ValidationResult {
-    const errors: string[] = [];
-    
+    const errors: string[] = []
+
     if (password.length < PASSWORD_REQUIREMENTS.minLength) {
-      errors.push(`パスワードは${PASSWORD_REQUIREMENTS.minLength}文字以上で入力してください`);
+      errors.push(
+        `パスワードは${PASSWORD_REQUIREMENTS.minLength}文字以上で入力してください`
+      )
     }
-    
+
     if (!/[A-Z]/.test(password)) {
-      errors.push('大文字を含めてください');
+      errors.push('大文字を含めてください')
     }
-    
+
     if (!/[a-z]/.test(password)) {
-      errors.push('小文字を含めてください');
+      errors.push('小文字を含めてください')
     }
-    
+
     if (!/[0-9]/.test(password)) {
-      errors.push('数字を含めてください');
+      errors.push('数字を含めてください')
     }
-    
+
     if (!/[!@#$%^&*]/.test(password)) {
-      errors.push('特殊文字を含めてください');
+      errors.push('特殊文字を含めてください')
     }
-    
+
     return {
       isValid: errors.length === 0,
-      errors
-    };
+      errors,
+    }
   }
 }
 ```
 
 ### Session Management
+
 ```typescript
 // Redis Session Store
 export class SessionManager {
-  private redis: Redis;
-  
+  private redis: Redis
+
   constructor() {
-    this.redis = new Redis(process.env.REDIS_URL);
+    this.redis = new Redis(process.env.REDIS_URL)
   }
 
   async createSession(userId: string, refreshToken: string): Promise<void> {
-    const sessionKey = `session:${userId}`;
+    const sessionKey = `session:${userId}`
     const sessionData = {
       refreshToken,
       createdAt: new Date().toISOString(),
       lastActive: new Date().toISOString(),
       userAgent: req.headers['user-agent'],
-      ipAddress: req.ip
-    };
-    
-    await this.redis.setex(sessionKey, 604800, JSON.stringify(sessionData)); // 7 days
+      ipAddress: req.ip,
+    }
+
+    await this.redis.setex(sessionKey, 604800, JSON.stringify(sessionData)) // 7 days
   }
 
-  async validateSession(userId: string, refreshToken: string): Promise<boolean> {
-    const sessionKey = `session:${userId}`;
-    const sessionData = await this.redis.get(sessionKey);
-    
-    if (!sessionData) return false;
-    
-    const session = JSON.parse(sessionData);
-    return session.refreshToken === refreshToken;
+  async validateSession(
+    userId: string,
+    refreshToken: string
+  ): Promise<boolean> {
+    const sessionKey = `session:${userId}`
+    const sessionData = await this.redis.get(sessionKey)
+
+    if (!sessionData) return false
+
+    const session = JSON.parse(sessionData)
+    return session.refreshToken === refreshToken
   }
 
   async revokeSession(userId: string): Promise<void> {
-    const sessionKey = `session:${userId}`;
-    await this.redis.del(sessionKey);
+    const sessionKey = `session:${userId}`
+    await this.redis.del(sessionKey)
   }
 }
 ```
 
 ### Rate Limiting
+
 ```typescript
 // Rate Limiting設定
 export const RATE_LIMITS = {
   login: {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5,                    // 5 attempts
-    skipSuccessfulRequests: true
+    max: 5, // 5 attempts
+    skipSuccessfulRequests: true,
   },
   register: {
     windowMs: 60 * 60 * 1000, // 1 hour
-    max: 3,                    // 3 attempts
-    skipSuccessfulRequests: true
+    max: 3, // 3 attempts
+    skipSuccessfulRequests: true,
   },
   resetPassword: {
     windowMs: 60 * 60 * 1000, // 1 hour
-    max: 3,                    // 3 attempts
-    skipSuccessfulRequests: true
+    max: 3, // 3 attempts
+    skipSuccessfulRequests: true,
   },
   general: {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100                   // 100 requests
-  }
-};
+    max: 100, // 100 requests
+  },
+}
 
 // Redis Rate Limiter
 export class RateLimiter {
-  private redis: Redis;
-  
+  private redis: Redis
+
   constructor() {
-    this.redis = new Redis(process.env.REDIS_URL);
+    this.redis = new Redis(process.env.REDIS_URL)
   }
 
-  async checkLimit(key: string, limit: number, window: number): Promise<{
-    allowed: boolean;
-    remaining: number;
-    resetTime: number;
+  async checkLimit(
+    key: string,
+    limit: number,
+    window: number
+  ): Promise<{
+    allowed: boolean
+    remaining: number
+    resetTime: number
   }> {
-    const current = await this.redis.incr(key);
-    
+    const current = await this.redis.incr(key)
+
     if (current === 1) {
-      await this.redis.expire(key, Math.ceil(window / 1000));
+      await this.redis.expire(key, Math.ceil(window / 1000))
     }
-    
-    const ttl = await this.redis.ttl(key);
-    
+
+    const ttl = await this.redis.ttl(key)
+
     return {
       allowed: current <= limit,
       remaining: Math.max(0, limit - current),
-      resetTime: Date.now() + (ttl * 1000)
-    };
+      resetTime: Date.now() + ttl * 1000,
+    }
   }
 }
 ```
@@ -434,43 +456,52 @@ export class RateLimiter {
 ## API実装例
 
 ### 認証エンドポイント
+
 ```typescript
 // POST /api/auth/register
-export default async function register(req: NextApiRequest, res: NextApiResponse) {
+export default async function register(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   try {
-    const { email, password, name, role } = req.body;
-    
+    const { email, password, name, role } = req.body
+
     // Input validation
-    const validationResult = validateRegistrationInput({ email, password, name, role });
+    const validationResult = validateRegistrationInput({
+      email,
+      password,
+      name,
+      role,
+    })
     if (!validationResult.isValid) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Validation failed',
-        details: validationResult.errors 
-      });
+        details: validationResult.errors,
+      })
     }
 
     // Check if user exists
-    const existingUser = await getUserByEmail(email);
+    const existingUser = await getUserByEmail(email)
     if (existingUser) {
-      return res.status(409).json({ error: 'User already exists' });
+      return res.status(409).json({ error: 'User already exists' })
     }
 
     // Create user
-    const hashedPassword = await PasswordService.hash(password);
+    const hashedPassword = await PasswordService.hash(password)
     const user = await createUser({
       email,
       password: hashedPassword,
       name,
       role,
-      is_verified: false
-    });
+      is_verified: false,
+    })
 
     // Send verification email
-    await sendVerificationEmail(user.email, user.verification_token);
+    await sendVerificationEmail(user.email, user.verification_token)
 
     res.status(201).json({
       success: true,
@@ -480,14 +511,15 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
           email: user.email,
           name: user.name,
           role: user.role,
-          is_verified: user.is_verified
+          is_verified: user.is_verified,
         },
-        message: 'Registration successful. Please check your email for verification.'
-      }
-    });
+        message:
+          'Registration successful. Please check your email for verification.',
+      },
+    })
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Registration error:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 }
 
@@ -495,45 +527,50 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
 export default withRateLimit(
   async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method not allowed' });
+      return res.status(405).json({ error: 'Method not allowed' })
     }
 
     try {
-      const { email, password } = req.body;
+      const { email, password } = req.body
 
       // Find user
-      const user = await getUserByEmail(email);
+      const user = await getUserByEmail(email)
       if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Invalid credentials' })
       }
 
       // Verify password
-      const isValidPassword = await PasswordService.verify(password, user.password);
+      const isValidPassword = await PasswordService.verify(
+        password,
+        user.password
+      )
       if (!isValidPassword) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Invalid credentials' })
       }
 
       // Check account status
       if (!user.is_verified) {
-        return res.status(401).json({ error: 'Please verify your email address' });
+        return res
+          .status(401)
+          .json({ error: 'Please verify your email address' })
       }
 
       if (!user.is_active) {
-        return res.status(401).json({ error: 'Account is disabled' });
+        return res.status(401).json({ error: 'Account is disabled' })
       }
 
       // Generate tokens
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
+      const accessToken = generateAccessToken(user)
+      const refreshToken = generateRefreshToken(user)
 
       // Create session
-      await sessionManager.createSession(user.id, refreshToken);
+      await sessionManager.createSession(user.id, refreshToken)
 
       // Set cookies
       res.setHeader('Set-Cookie', [
         `refresh_token=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`, // 7 days
-        `access_token=${accessToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=900` // 15 minutes
-      ]);
+        `access_token=${accessToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=900`, // 15 minutes
+      ])
 
       res.status(200).json({
         success: true,
@@ -542,24 +579,25 @@ export default withRateLimit(
             id: user.id,
             email: user.email,
             name: user.name,
-            role: user.role
+            role: user.role,
           },
           token: accessToken,
-          expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
-        }
-      });
+          expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+        },
+      })
     } catch (error) {
-      console.error('Login error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('Login error:', error)
+      res.status(500).json({ error: 'Internal server error' })
     }
   },
   RATE_LIMITS.login
-);
+)
 ```
 
 ## フロントエンド統合
 
 ### React Auth Context
+
 ```typescript
 // AuthContext.tsx
 interface AuthContextType {
@@ -618,7 +656,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       method: 'POST',
       credentials: 'include'
     });
-    
+
     setUser(null);
     tokenManager.clearTokens();
   };
@@ -637,10 +675,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Protected Route Component
-export function ProtectedRoute({ 
-  children, 
-  requiredRole 
-}: { 
+export function ProtectedRoute({
+  children,
+  requiredRole
+}: {
   children: React.ReactNode;
   requiredRole?: UserRole;
 }) {
@@ -665,6 +703,7 @@ export function ProtectedRoute({
 ## セキュリティチェックリスト
 
 ### 実装時確認事項
+
 - [ ] **Password Security**
   - [ ] 強力なハッシュアルゴリズム使用（bcrypt, scrypt, Argon2）
   - [ ] 適切なソルトラウンド設定（12以上）

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+
 import matter from 'gray-matter'
 
 export interface InterviewArticle {
@@ -70,10 +71,12 @@ export function getAllInterviewArticles(): InterviewArticleSummary[] {
   return articles
 }
 
-export function getInterviewArticleBySlug(slug: string): InterviewArticle | null {
+export function getInterviewArticleBySlug(
+  slug: string
+): InterviewArticle | null {
   try {
     const fullPath = path.join(interviewDirectory, `${slug}.mdx`)
-    
+
     if (!fs.existsSync(fullPath)) {
       return null
     }
@@ -109,39 +112,41 @@ export function getInterviewArticleBySlug(slug: string): InterviewArticle | null
 
 export function getArticlesByTag(tag: string): InterviewArticleSummary[] {
   const allArticles = getAllInterviewArticles()
-  return allArticles.filter(article => 
+  return allArticles.filter(article =>
     article.tags.some(t => t.toLowerCase() === tag.toLowerCase())
   )
 }
 
-export function getArticlesByIndustry(industry: string): InterviewArticleSummary[] {
+export function getArticlesByIndustry(
+  industry: string
+): InterviewArticleSummary[] {
   const allArticles = getAllInterviewArticles()
-  return allArticles.filter(article => 
-    article.industry.toLowerCase() === industry.toLowerCase()
+  return allArticles.filter(
+    article => article.industry.toLowerCase() === industry.toLowerCase()
   )
 }
 
 export function getAllTags(): string[] {
   const allArticles = getAllInterviewArticles()
   const tagSet = new Set<string>()
-  
+
   allArticles.forEach(article => {
     article.tags.forEach(tag => tagSet.add(tag))
   })
-  
+
   return Array.from(tagSet).sort()
 }
 
 export function getAllIndustries(): string[] {
   const allArticles = getAllInterviewArticles()
   const industrySet = new Set<string>()
-  
+
   allArticles.forEach(article => {
     if (article.industry) {
       industrySet.add(article.industry)
     }
   })
-  
+
   return Array.from(industrySet).sort()
 }
 
@@ -171,7 +176,9 @@ export function formatDate(dateString: string): string {
   })
 }
 
-export function generateSEOKeywords(article: InterviewArticleSummary): string[] {
+export function generateSEOKeywords(
+  article: InterviewArticleSummary
+): string[] {
   const keywords = [
     article.industry,
     'AI導入',
@@ -181,5 +188,5 @@ export function generateSEOKeywords(article: InterviewArticleSummary): string[] 
     ...article.tags,
   ].filter(Boolean)
 
-  return [...new Set(keywords)]
+  return Array.from(new Set(keywords))
 }

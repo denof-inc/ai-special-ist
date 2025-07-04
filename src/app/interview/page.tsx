@@ -1,6 +1,7 @@
-import { getAllInterviewArticles } from '@/lib/mdx'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+
+import { Button } from '@/components/ui/button'
+import { getAllInterviewArticles } from '@/lib/mdx'
 import { formatDate } from '@/lib/mdx'
 
 export default async function InterviewPage() {
@@ -8,68 +9,73 @@ export default async function InterviewPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="mx-auto max-w-4xl">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">AI活用インタビュー</h1>
-          <p className="text-muted-foreground text-lg">
+          <h1 className="mb-4 text-4xl font-bold">AI活用インタビュー</h1>
+          <p className="text-lg text-muted-foreground">
             企業でのAI導入事例と実践的な活用方法を専門家が解説
           </p>
         </div>
 
         <div className="grid gap-8">
-          {articles.map((article) => (
-            <article key={article.slug} className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col lg:flex-row gap-6">
+          {articles.map(article => (
+            <article
+              key={article.slug}
+              className="rounded-lg border p-6 transition-shadow hover:shadow-lg"
+            >
+              <div className="flex flex-col gap-6 lg:flex-row">
                 {article.featuredImage && (
                   <div className="lg:w-1/3">
                     <img
                       src={article.featuredImage}
                       alt={article.title}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="h-48 w-full rounded-lg object-cover"
                     />
                   </div>
                 )}
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
                       {article.industry}
                     </span>
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-sm text-muted-foreground">
                       {formatDate(article.date)}
                     </span>
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-sm text-muted-foreground">
                       読了時間: {article.readingTime}分
                     </span>
                   </div>
-                  
-                  <h2 className="text-2xl font-bold mb-3 hover:text-primary transition-colors">
+
+                  <h2 className="mb-3 text-2xl font-bold transition-colors hover:text-primary">
                     <Link href={`/interview/${article.slug}`}>
                       {article.title}
                     </Link>
                   </h2>
-                  
-                  <p className="text-muted-foreground mb-4 line-clamp-3">
+
+                  <p className="mb-4 line-clamp-3 text-muted-foreground">
                     {article.excerpt}
                   </p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <span className="font-medium">{article.author}</span>
-                      <span className="text-muted-foreground">@ {article.company}</span>
+                      <span className="text-muted-foreground">
+                        @ {article.company}
+                      </span>
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-2">
-                      {article.tags.slice(0, 3).map((tag) => (
+                      {article.tags.slice(0, 3).map(tag => (
                         <span
                           key={tag}
-                          className="bg-secondary text-secondary-foreground px-2 py-1 rounded text-xs"
+                          className="rounded bg-secondary px-2 py-1 text-xs text-secondary-foreground"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="mt-4">
                     <Button asChild variant="outline">
                       <Link href={`/interview/${article.slug}`}>
@@ -84,22 +90,20 @@ export default async function InterviewPage() {
         </div>
 
         {articles.length === 0 && (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-muted-foreground">
               まだインタビュー記事がありません。
             </p>
           </div>
         )}
 
-        <div className="mt-16 p-8 bg-muted/50 rounded-lg text-center">
-          <h3 className="text-2xl font-bold mb-4">AI導入でお悩みですか？</h3>
-          <p className="text-muted-foreground mb-6">
+        <div className="mt-16 rounded-lg bg-muted/50 p-8 text-center">
+          <h3 className="mb-4 text-2xl font-bold">AI導入でお悩みですか？</h3>
+          <p className="mb-6 text-muted-foreground">
             専門家による無料相談で、あなたの課題に最適なAI活用方法をご提案します
           </p>
           <Button asChild size="lg" className="interview-cta">
-            <Link href="/qa">
-              無料相談を始める
-            </Link>
+            <Link href="/qa">無料相談を始める</Link>
           </Button>
         </div>
       </div>
@@ -109,6 +113,14 @@ export default async function InterviewPage() {
 
 export const metadata = {
   title: 'AI活用インタビュー | AIスペシャリスト.com',
-  description: '企業でのAI導入事例と実践的な活用方法を専門家が解説。成功事例から学ぶAI活用のポイント。',
-  keywords: ['AI導入', 'AI活用事例', 'デジタル変革', 'DX', 'インタビュー', 'AI専門家'],
+  description:
+    '企業でのAI導入事例と実践的な活用方法を専門家が解説。成功事例から学ぶAI活用のポイント。',
+  keywords: [
+    'AI導入',
+    'AI活用事例',
+    'デジタル変革',
+    'DX',
+    'インタビュー',
+    'AI専門家',
+  ],
 }

@@ -64,15 +64,15 @@
 }
 
 .interview-content h1 {
-  @apply text-3xl font-bold mb-6;
+  @apply mb-6 text-3xl font-bold;
 }
 
 .interview-content h2 {
-  @apply text-2xl font-semibold mt-8 mb-4;
+  @apply mb-4 mt-8 text-2xl font-semibold;
 }
 
 .interview-content h3 {
-  @apply text-xl font-semibold mt-6 mb-3;
+  @apply mb-3 mt-6 text-xl font-semibold;
 }
 
 .interview-content p {
@@ -80,18 +80,19 @@
 }
 
 .interview-content blockquote {
-  @apply border-l-4 border-primary pl-4 italic my-6;
+  @apply my-6 border-l-4 border-primary pl-4 italic;
 }
 
 .interview-content code {
-  @apply bg-muted px-1 py-0.5 rounded text-sm;
+  @apply rounded bg-muted px-1 py-0.5 text-sm;
 }
 
 .interview-content pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto my-6;
+  @apply my-6 overflow-x-auto rounded-lg bg-muted p-4;
 }
 
-.interview-content ul, .interview-content ol {
+.interview-content ul,
+.interview-content ol {
   @apply mb-4 pl-6;
 }
 
@@ -100,12 +101,12 @@
 }
 
 .interview-content img {
-  @apply rounded-lg my-6;
+  @apply my-6 rounded-lg;
 }
 
 /* CTA button styles */
 .interview-cta {
-  @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold 
-         hover:bg-primary/90 transition-colors duration-200 
-         inline-flex items-center gap-2;
+  @apply inline-flex items-center gap-2 rounded-lg bg-primary px-6 
+         py-3 font-semibold text-primary-foreground 
+         transition-colors duration-200 hover:bg-primary/90;
 }

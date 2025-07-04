@@ -120,6 +120,7 @@ AI運用5原則
   - `Resolves #XX` - 機能実装・要求解決
 
 **例：**
+
 ```
 ## Summary
 新機能を実装しました
@@ -134,6 +135,7 @@ Closes #14
 ## 📊 リファクタリング標準プロセス
 
 ### 実施タイミング
+
 - **定期実施**: 月1回以上
 - **機能追加前**: 大きな機能追加の前
 - **品質低下時**: ESLintエラー増加、型エラー頻発時
@@ -142,6 +144,7 @@ Closes #14
 ## 📚 開発者向けドキュメント管理
 
 ### docsディレクトリ構造
+
 ```
 docs/
 ├── project/           # プロジェクト概要・ビジョン
@@ -152,18 +155,21 @@ docs/
 ```
 
 ### 必須確認事項
+
 - **新機能開発時**: `docs/project/README.md`でビジネス要件確認
 - **技術選定時**: `docs/architecture/README.md`で技術スタック確認
 - **コード作成時**: `docs/development/README.md`でコード規約確認
 - **API作成時**: `docs/api/README.md`で設計方針確認
 
 ### ドキュメント更新ルール
+
 1. **機能追加・変更時**: 該当ドキュメントの更新必須
 2. **アーキテクチャ変更時**: `docs/architecture/README.md`更新必須
 3. **開発ルール変更時**: `docs/development/README.md`更新必須
 4. **大きな変更時**: プロジェクトオーナーに事前確認
 
 ### Single Source of Truth原則
+
 - **ビジネス仕様**: `docs/project/README.md`
 - **技術仕様**: `docs/architecture/README.md`
 - **開発規約**: `docs/development/README.md`
@@ -172,21 +178,26 @@ docs/
 ## Gemini CLI 連携ガイド
 
 ### 目的
+
 ユーザーが **「Geminiと相談しながら進めて」** （または同義語）と指示した場合、Claude は以降のタスクを **Gemini CLI** と協調しながら進める。
 Gemini から得た回答はそのまま提示し、Claude 自身の解説・統合も付け加えることで、両エージェントの知見を融合する。
 
 ### トリガー
+
 - 正規表現: `/Gemini.*相談しながら/`
 - 例:
 - 「Geminiと相談しながら進めて」
 - 「この件、Geminiと話しつつやりましょう」
 
 ### 基本フロー
+
 1. **PROMPT 生成**
-Claude はユーザーの要件を 1 つのテキストにまとめ、環境変数 `$PROMPT` に格納する。
+   Claude はユーザーの要件を 1 つのテキストにまとめ、環境変数 `$PROMPT` に格納する。
 
 2. **Gemini CLI 呼び出し**
+
 ```bash
 gemini <<EOF
 $PROMPT
 EOF
+```
