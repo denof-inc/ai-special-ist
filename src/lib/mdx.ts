@@ -145,7 +145,7 @@ export function getAllIndustries(): string[] {
   return Array.from(industrySet).sort()
 }
 
-function calculateReadingTime(content: string): number {
+export function calculateReadingTime(content: string): number {
   // 平均読速: 400文字/分 (日本語)
   const wordsPerMinute = 400
   const wordCount = content.length
