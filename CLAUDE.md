@@ -202,4 +202,3 @@ gemini <<EOF
 $PROMPT
 EOF
 ```
-
