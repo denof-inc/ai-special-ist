@@ -173,6 +173,7 @@ docs/
 - **ビジネス仕様**: `docs/project/README.md`
 - **技術仕様**: `docs/architecture/README.md`
 - **開発規約**: `docs/development/README.md`
+
 - **実装**: コードそのもの（API仕様、DBスキーマ等は自動生成）
 
 ## Gemini CLI 連携ガイド
@@ -201,3 +202,4 @@ gemini <<EOF
 $PROMPT
 EOF
 ```
+
