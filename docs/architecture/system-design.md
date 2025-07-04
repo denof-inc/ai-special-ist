@@ -35,6 +35,7 @@ AIスペシャリスト.comのシステム全体設計について、アーキ�
 ## フェーズ別アーキテクチャ進化
 
 ### v0.1 PoC アーキテクチャ
+
 ```
 ┌─────────────────┐
 │   Next.js App   │
@@ -53,6 +54,7 @@ AIスペシャリスト.comのシステム全体設計について、アーキ�
 ```
 
 ### v1.0 β アーキテクチャ
+
 ```
 ┌─────────────────┐    ┌─────────────────┐
 │   Next.js       │    │   PostgreSQL    │
@@ -70,6 +72,7 @@ AIスペシャリスト.comのシステム全体設計について、アーキ�
 ```
 
 ### Year-1 スケールアーキテクチャ
+
 ```
 ┌─────────────────┐    ┌─────────────────┐
 │   Next.js       │    │   NestJS API    │
@@ -93,6 +96,7 @@ AIスペシャリスト.comのシステム全体設計について、アーキ�
 ## データフロー設計
 
 ### 1. ユーザー認証フロー
+
 ```
 User → Frontend → API Routes → Database
   │                    │           │
@@ -106,6 +110,7 @@ Authenticated Session
 ```
 
 ### 2. 質問・回答フロー
+
 ```
 User Input → Frontend → API Validation → Database
      │           │            │             │
@@ -122,6 +127,7 @@ Updated UI + Notifications
 ```
 
 ### 3. AI支援フロー
+
 ```
 User Request → Content Analysis → OpenAI API → Response Processing
       │              │               │              │
@@ -140,6 +146,7 @@ Enhanced Content + Suggestions
 ## コンポーネント設計
 
 ### フロントエンド コンポーネント階層
+
 ```
 App Layout
 ├── Header
@@ -166,6 +173,7 @@ App Layout
 ```
 
 ### バックエンド サービス階層（Year-1）
+
 ```
 API Gateway (NestJS)
 ├── Auth Module
@@ -198,6 +206,7 @@ API Gateway (NestJS)
 ## セキュリティアーキテクチャ
 
 ### 認証・認可フロー
+
 ```
 1. ユーザーログイン
    ├── Email/Password検証
@@ -219,6 +228,7 @@ API Gateway (NestJS)
 ```
 
 ### セキュリティレイヤー
+
 ```
 ┌─────────────────────────────────────────┐
 │ WAF (Web Application Firewall)          │
@@ -246,6 +256,7 @@ API Gateway (NestJS)
 ## パフォーマンス設計
 
 ### キャッシュ戦略
+
 ```
 ┌─────────────────┐    ┌─────────────────┐
 │   Browser       │    │   CDN           │
@@ -269,6 +280,7 @@ API Gateway (NestJS)
 ## 災害復旧設計
 
 ### バックアップアーキテクチャ
+
 ```
 Primary Database → Automated Backup → S3 Storage
          │                │              │
@@ -280,6 +292,7 @@ Application Data → Code Repository → GitHub Backup
 ```
 
 ### 復旧手順
+
 ```
 1. 障害検知 (15分以内)
    ├── 自動監視アラート
@@ -305,4 +318,3 @@ Application Data → Code Repository → GitHub Backup
 ---
 
 **このシステム設計は段階的に進化します。各フェーズで必要な部分から実装し、将来の拡張性を確保しながら開発を進めてください。**
-

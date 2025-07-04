@@ -1,17 +1,6 @@
-const withMDX = require('@next/mdx')({
-  extension: /\.mdx?$/,
-  options: {
-    remarkPlugins: [require('remark-gfm')],
-    rehypePlugins: [require('rehype-slug'), require('rehype-highlight')],
-  },
-})
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  experimental: {
-    mdxRs: true,
-  },
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
   },
@@ -30,5 +19,14 @@ const nextConfig = {
     ]
   },
 }
+
+// Use simpler MDX configuration without problematic plugins
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+})
 
 module.exports = withMDX(nextConfig)

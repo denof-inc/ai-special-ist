@@ -3,12 +3,14 @@
 ## 🚀 クイックスタート
 
 ### 前提条件
+
 - Node.js 18.17.0+
 - pnpm 8.0.0+
 - PostgreSQL 14+
 - Docker (オプション)
 
 ### 5分セットアップ
+
 ```bash
 # 1. リポジトリクローン
 git clone https://github.com/denof-inc/ai-specialist-platform.git
@@ -34,6 +36,7 @@ pnpm run dev
 ## 🛠️ 技術スタック
 
 ### フロントエンド
+
 - **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -42,6 +45,7 @@ pnpm run dev
 - **Forms**: React Hook Form + Zod
 
 ### バックエンド
+
 - **v0.1**: Next.js API Routes
 - **v1.0+**: NestJS (段階的移行)
 - **Database**: PostgreSQL + pgvector
@@ -50,6 +54,7 @@ pnpm run dev
 - **Queue**: Bull/BullMQ
 
 ### インフラ・デプロイ
+
 - **Hosting**: Vercel (Frontend) + Railway/Render (Backend)
 - **Database**: AWS RDS PostgreSQL
 - **CDN**: Vercel Edge Network
@@ -57,6 +62,7 @@ pnpm run dev
 - **CI/CD**: GitHub Actions
 
 ### 外部サービス
+
 - **AI**: OpenAI GPT-4o-mini
 - **Payment**: Stripe
 - **CMS**: Notion → Decap CMS → Strapi (v1.0)
@@ -87,6 +93,7 @@ pnpm run dev
 ## 🔄 開発フロー
 
 ### ブランチ戦略
+
 ```bash
 # 新機能開発
 git checkout -b feature/user-authentication
@@ -100,6 +107,7 @@ git checkout -b docs/api-documentation
 ```
 
 ### コミット規約
+
 ```bash
 # 機能追加
 git commit -m "feat: ユーザー認証機能を追加"
@@ -118,6 +126,7 @@ git commit -m "test: ユーザー登録のテストケースを追加"
 ```
 
 ### PR作成手順
+
 ```bash
 # 1. 変更をプッシュ
 git push origin feature/your-feature
@@ -138,6 +147,7 @@ git branch -d feature/your-feature
 ### 役割別ガイド
 
 #### 👨‍💻 フロントエンド開発者
+
 ```bash
 # 必読ドキュメント
 docs/development/setup-guide.md      # 環境セットアップ
@@ -146,6 +156,7 @@ docs/api/endpoints.md               # API仕様
 ```
 
 #### ⚙️ バックエンド開発者
+
 ```bash
 # 必読ドキュメント
 docs/architecture/database-design.md # DB設計
@@ -154,6 +165,7 @@ docs/architecture/system-design.md   # システム設計
 ```
 
 #### 🔧 DevOps・インフラ
+
 ```bash
 # 必読ドキュメント
 docs/deployment/README.md           # デプロイ概要
@@ -161,6 +173,7 @@ docs/architecture/README.md         # インフラ構成
 ```
 
 #### 💼 プロダクトオーナー
+
 ```bash
 # 必読ドキュメント
 docs/project/business-requirements.md # ビジネス要件
@@ -170,6 +183,7 @@ docs/project/README.md               # プロジェクト概要
 ## ⚡ 主要コマンド
 
 ### 開発
+
 ```bash
 # 開発サーバー起動
 pnpm run dev
@@ -186,6 +200,7 @@ pnpm run format
 ```
 
 ### データベース
+
 ```bash
 # マイグレーション実行
 pnpm run db:migrate
@@ -201,6 +216,7 @@ pnpm run db:reset
 ```
 
 ### テスト
+
 ```bash
 # 全テスト実行
 pnpm run test
@@ -216,6 +232,7 @@ pnpm run test:e2e
 ```
 
 ### ビルド・デプロイ
+
 ```bash
 # 本番ビルド
 pnpm run build
@@ -230,12 +247,14 @@ pnpm run update-deps
 ## 🎯 開発優先度
 
 ### v0.1 PoC（現在）
+
 - [ ] 基本認証システム（Next.js + JWT）
 - [ ] 質問投稿・表示機能（CRUD + 検索）
 - [ ] プロフィールページ（ユーザー・専門家）
 - [ ] 基本的なマッチング（Q&A→回答選択）
 
 ### v1.0 β（2025年Q4）
+
 - [ ] 完全なユーザー認証・認可（RBAC + セッション管理）
 - [ ] 決済・サブスクリプション（Stripe統合）
 - [ ] 評価・レビューシステム
@@ -244,11 +263,13 @@ pnpm run update-deps
 ## 🚨 重要ルール
 
 ### 開発前の必須確認
+
 1. **`docs/`ディレクトリを必ず確認**
 2. **`CLAUDE.md`のAI運用5原則を遵守**
 3. **既存のコード規約・アーキテクチャに従う**
 
 ### 品質基準
+
 - **テストカバレッジ**: 80%以上
 - **ESLint**: エラー0件
 - **TypeScript**: `any`型使用禁止
@@ -257,6 +278,7 @@ pnpm run update-deps
 ## 🆘 トラブルシューティング
 
 ### よくある問題
+
 ```bash
 # ポート競合
 lsof -i :3000
@@ -275,6 +297,7 @@ docker-compose up -d postgres
 ```
 
 ### サポート
+
 - **技術的問題**: GitHub Issues
 - **設計相談**: `docs/`ディレクトリ参照
 - **緊急対応**: 開発チームに連絡
