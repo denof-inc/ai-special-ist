@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="mx-auto max-w-4xl text-center">

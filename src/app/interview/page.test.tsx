@@ -59,8 +59,8 @@ describe('InterviewPage', () => {
     const component = await InterviewPage()
     render(component)
 
-    expect(screen.getByText('会社1')).toBeInTheDocument()
-    expect(screen.getByText('会社2')).toBeInTheDocument()
+    expect(screen.getByText('@ 会社1')).toBeInTheDocument()
+    expect(screen.getByText('@ 会社2')).toBeInTheDocument()
     expect(screen.getByText('業界1')).toBeInTheDocument()
     expect(screen.getByText('業界2')).toBeInTheDocument()
   })

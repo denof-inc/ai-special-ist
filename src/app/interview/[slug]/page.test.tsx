@@ -20,17 +20,17 @@ jest.mock('@/lib/mdx', () => ({
 }))
 
 jest.mock('@/lib/markdown-table', () => ({
-  parseMarkdownTable: jest.fn(content => content),
+  parseMarkdownTable: jest.fn((content): string => content),
 }))
 
 jest.mock('next-mdx-remote/rsc', () => ({
-  MDXRemote: ({ source }: { source: string }) => (
+  MDXRemote: ({ source }: { source: string }): JSX.Element => (
     <div data-testid="mdx-content">{source}</div>
   ),
 }))
 
 jest.mock('@/components/interview-content', () => ({
-  InterviewContent: ({ children }: { children: React.ReactNode }) => (
+  InterviewContent: ({ children }: { children: React.ReactNode }): JSX.Element => (
     <div data-testid="interview-content">{children}</div>
   ),
 }))
@@ -49,7 +49,7 @@ jest.mock('@/components/ui/button', () => ({
     children: React.ReactNode
     asChild?: boolean
     [key: string]: unknown
-  }) => {
+  }): JSX.Element => {
     if (asChild) {
       return <>{children}</>
     }
@@ -107,7 +107,7 @@ describe('InterviewArticlePage', () => {
     expect(notFound).toHaveBeenCalled()
   })
 
-  it('displays article tags correctly', async () => {
+  it('displays article tags correctly', async (): Promise<void> => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
     const component = await InterviewArticlePage({
@@ -120,7 +120,7 @@ describe('InterviewArticlePage', () => {
     expect(screen.getByText('イノベーション')).toBeInTheDocument()
   })
 
-  it('displays profile and company data sections', async () => {
+  it('displays profile and company data sections', async (): Promise<void> => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
     const component = await InterviewArticlePage({
@@ -137,7 +137,7 @@ describe('InterviewArticlePage', () => {
 })
 
 describe('generateStaticParams', () => {
-  it('returns static params for all articles', async () => {
+  it('returns static params for all articles', async (): Promise<void> => {
     const mockArticles = [
       { slug: 'article-1' },
       { slug: 'article-2' },
@@ -156,7 +156,7 @@ describe('generateStaticParams', () => {
 })
 
 describe('generateMetadata', () => {
-  it('returns metadata for existing article', async () => {
+  it('returns metadata for existing article', async (): Promise<void> => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
     const result = await generateMetadata({
@@ -185,7 +185,7 @@ describe('generateMetadata', () => {
     })
   })
 
-  it('returns not found metadata for non-existent article', async () => {
+  it('returns not found metadata for non-existent article', async (): Promise<void> => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(null)
 
     const result = await generateMetadata({ params: { slug: 'non-existent' } })

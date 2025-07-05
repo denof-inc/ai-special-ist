@@ -26,16 +26,16 @@ interface InterviewTemplateProps {
   children: React.ReactNode
 }
 
-export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
+export function InterviewTemplate({ data, children }: InterviewTemplateProps): JSX.Element {
   return (
-    <div className="interview-template">
+    <div className="mx-auto w-full max-w-4xl px-4 py-8">
       {/* Template marker for future identification */}
       <div className="hidden" data-template="standard-interview" />
 
       {/* Standard header structure */}
-      <header className="interview-header mb-12">
+      <header className="mb-12 border-b pb-8">
         {/* Meta information */}
-        <div className="interview-meta mb-6 flex flex-wrap items-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3">
           <span className="rounded bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
             {data.industry}
           </span>
@@ -46,31 +46,31 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
         </div>
 
         {/* Main title */}
-        <h1 className="interview-title mb-8 text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
+        <h1 className="mb-8 text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
           {data.title}
         </h1>
 
         {/* Person profile */}
-        <div className="interview-person-profile mb-10 border-l-4 border-primary bg-slate-50 p-6">
+        <div className="mb-10 border-l-4 border-primary bg-slate-50 p-6">
           <div className="flex flex-col items-start gap-6 md:flex-row">
             <div className="flex-shrink-0">
               <div className="h-24 w-24 overflow-hidden rounded-lg bg-slate-200 md:h-32 md:w-32">
                 {/* Avatar will be injected by parent component */}
-                <div className="interview-avatar-placeholder h-full w-full bg-gradient-to-br from-primary/20 to-primary/40" />
+                <div className="h-full w-full bg-gradient-to-br from-primary/20 to-primary/40" />
               </div>
             </div>
 
             <div className="flex-1">
-              <h2 className="interview-person-name mb-2 text-2xl font-bold text-foreground">
+              <h2 className="mb-2 text-2xl font-bold text-foreground">
                 {data.author}
               </h2>
-              <p className="interview-person-company mb-3 text-lg font-semibold text-primary">
+              <p className="mb-3 text-lg font-semibold text-primary">
                 {data.company}
               </p>
-              <p className="interview-person-excerpt leading-relaxed text-muted-foreground">
+              <p className="leading-relaxed text-muted-foreground">
                 {data.excerpt}
               </p>
-              <div className="interview-tags mt-4 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 {data.tags.slice(0, 4).map(tag => (
                   <span
                     key={tag}
@@ -89,7 +89,7 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
       <main className="interview-content">{children}</main>
 
       {/* Template footer with standardized CTA */}
-      <footer className="interview-footer mt-16">
+      <footer className="mt-16 border-t pt-8">
         <div className="rounded-lg bg-muted/50 p-8">
           <div className="grid gap-8 md:grid-cols-2">
             <div>
@@ -99,7 +99,7 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
               <p className="mb-4 text-muted-foreground">
                 記事の内容についてより詳しく知りたい方は、専門家による無料相談をご活用ください。
               </p>
-              <button className="interview-cta rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground">
+              <button className="rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground">
                 無料相談を始める
               </button>
             </div>

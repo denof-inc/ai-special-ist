@@ -6,16 +6,16 @@ interface InterviewContentProps {
   children: React.ReactNode
 }
 
-export function InterviewContent({ children }: InterviewContentProps) {
+export function InterviewContent({ children }: InterviewContentProps): JSX.Element {
   useEffect(() => {
     // Add classes for styling
-    const styleInterviewContent = () => {
+    const styleInterviewContent = (): void => {
       const content = document.querySelector('.interview-content')
       if (!content) return
 
       const paragraphs = content.querySelectorAll('p')
 
-      paragraphs.forEach(p => {
+      paragraphs.forEach((p): void => {
         const strongElement = p.querySelector('strong:first-child')
         if (!strongElement) return
 

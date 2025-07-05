@@ -42,6 +42,7 @@ export default async function InterviewArticlePage({
           <header className="mb-12">
             {/* Hero Image - Full Width */}
             <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1400&h=600&fit=crop&crop=face"
                 alt={`${article.author}氏のインタビュー`}

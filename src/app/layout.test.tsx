@@ -4,7 +4,7 @@ import RootLayout from './layout'
 
 // Mock Next.js font imports
 jest.mock('next/font/google', () => ({
-  Inter: () => ({
+  Inter: (): { className: string } => ({
     className: 'inter-font',
   }),
 }))
