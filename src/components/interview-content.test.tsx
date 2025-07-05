@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+
 import { InterviewContent } from './interview-content'
 
 describe('InterviewContent', () => {
@@ -77,8 +78,12 @@ describe('InterviewContent', () => {
       </InterviewContent>
     )
 
-    expect(screen.getByText(/こんにちは、よろしくお願いします/)).toBeInTheDocument()
-    expect(screen.getByText(/こちらこそ、よろしくお願いします/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/こんにちは、よろしくお願いします/)
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/こちらこそ、よろしくお願いします/)
+    ).toBeInTheDocument()
   })
 
   it('applies responsive styling classes', () => {

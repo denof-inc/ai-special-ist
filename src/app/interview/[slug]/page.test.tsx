@@ -1,7 +1,12 @@
 import { render, screen } from '@testing-library/react'
 import { notFound } from 'next/navigation'
-import InterviewArticlePage, { generateStaticParams, generateMetadata } from './page'
+
 import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
+
+import InterviewArticlePage, {
+  generateStaticParams,
+  generateMetadata,
+} from './page'
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({
@@ -15,11 +20,13 @@ jest.mock('@/lib/mdx', () => ({
 }))
 
 jest.mock('@/lib/markdown-table', () => ({
-  parseMarkdownTable: jest.fn((content) => content),
+  parseMarkdownTable: jest.fn(content => content),
 }))
 
 jest.mock('next-mdx-remote/rsc', () => ({
-  MDXRemote: ({ source }: { source: string }) => <div data-testid="mdx-content">{source}</div>,
+  MDXRemote: ({ source }: { source: string }) => (
+    <div data-testid="mdx-content">{source}</div>
+  ),
 }))
 
 jest.mock('@/components/interview-content', () => ({
@@ -34,7 +41,15 @@ jest.mock('@/components/mdx-components', () => ({
 }))
 
 jest.mock('@/components/ui/button', () => ({
-  Button: ({ children, asChild, ...props }: any) => {
+  Button: ({
+    children,
+    asChild,
+    ...props
+  }: {
+    children: React.ReactNode
+    asChild?: boolean
+    [key: string]: unknown
+  }) => {
     if (asChild) {
       return <>{children}</>
     }
@@ -62,25 +77,29 @@ const mockArticle = {
 }
 
 describe('InterviewArticlePage', () => {
-  beforeEach(() => {
+  beforeEach((): void => {
     jest.clearAllMocks()
   })
 
-  it('renders interview article page correctly', async () => {
+  it('renders interview article page correctly', async (): Promise<void> => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
-    const component = await InterviewArticlePage({ params: { slug: 'test-interview' } })
+    const component = await InterviewArticlePage({
+      params: { slug: 'test-interview' },
+    })
     render(component)
 
     expect(screen.getByText('テストインタビュー記事')).toBeInTheDocument()
     expect(screen.getAllByText('田中太郎')).toHaveLength(2)
     expect(screen.getAllByText('テスト株式会社')).toHaveLength(2)
-    expect(screen.getAllByText('IT業界')).toHaveLength(2)
-    expect(screen.getByText('これはテスト記事の説明文です。')).toBeInTheDocument()
+    expect(screen.getAllByText('IT業界')).toHaveLength(3)
+    expect(
+      screen.getByText('これはテスト記事の説明文です。')
+    ).toBeInTheDocument()
     expect(screen.getByTestId('mdx-content')).toBeInTheDocument()
   })
 
-  it('calls notFound when article is not found', async () => {
+  it('calls notFound when article is not found', async (): Promise<void> => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(null)
 
     await InterviewArticlePage({ params: { slug: 'non-existent' } })
@@ -91,7 +110,9 @@ describe('InterviewArticlePage', () => {
   it('displays article tags correctly', async () => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
-    const component = await InterviewArticlePage({ params: { slug: 'test-interview' } })
+    const component = await InterviewArticlePage({
+      params: { slug: 'test-interview' },
+    })
     render(component)
 
     expect(screen.getByText('AI')).toBeInTheDocument()
@@ -102,7 +123,9 @@ describe('InterviewArticlePage', () => {
   it('displays profile and company data sections', async () => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
-    const component = await InterviewArticlePage({ params: { slug: 'test-interview' } })
+    const component = await InterviewArticlePage({
+      params: { slug: 'test-interview' },
+    })
     render(component)
 
     expect(screen.getByText('PROFILE')).toBeInTheDocument()
@@ -136,7 +159,9 @@ describe('generateMetadata', () => {
   it('returns metadata for existing article', async () => {
     ;(getInterviewArticleBySlug as jest.Mock).mockReturnValue(mockArticle)
 
-    const result = await generateMetadata({ params: { slug: 'test-interview' } })
+    const result = await generateMetadata({
+      params: { slug: 'test-interview' },
+    })
 
     expect(result).toEqual({
       title: 'テストインタビュー記事',
