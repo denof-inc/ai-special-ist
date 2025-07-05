@@ -60,48 +60,168 @@
 
 /* Interview article specific styles */
 .interview-content {
-  @apply prose prose-lg max-w-none;
+  line-height: 1.8;
+  max-width: 65ch;
+  margin: 0 auto;
 }
 
 .interview-content h1 {
-  @apply mb-6 text-3xl font-bold;
+  @apply mb-8 mt-12 text-3xl font-bold leading-tight;
+  margin-top: 3rem;
 }
 
 .interview-content h2 {
-  @apply mb-4 mt-8 text-2xl font-semibold;
+  @apply mb-6 mt-12 text-2xl font-bold leading-tight;
+  margin-top: 3rem;
+  border-bottom: 2px solid hsl(var(--border));
+  padding-bottom: 0.5rem;
 }
 
 .interview-content h3 {
-  @apply mb-3 mt-6 text-xl font-semibold;
+  @apply mb-4 mt-8 text-xl font-semibold;
+  margin-top: 2rem;
 }
 
 .interview-content p {
-  @apply mb-4 leading-relaxed;
+  @apply mb-6 text-base leading-relaxed;
+  margin-bottom: 1.5rem;
 }
 
 .interview-content blockquote {
-  @apply my-6 border-l-4 border-primary pl-4 italic;
+  @apply my-8 rounded-lg border-l-4 border-primary bg-primary/5 py-4 pl-6 pr-4 italic;
+  margin: 2rem 0;
+}
+
+.interview-content blockquote p {
+  @apply mb-0 font-medium;
+  margin-bottom: 0;
 }
 
 .interview-content code {
-  @apply rounded bg-muted px-1 py-0.5 text-sm;
+  @apply rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-800;
 }
 
 .interview-content pre {
-  @apply my-6 overflow-x-auto rounded-lg bg-muted p-4;
+  @apply my-8 overflow-x-auto rounded-xl bg-slate-900 p-6 text-slate-100;
+  margin: 2rem 0;
+}
+
+.interview-content pre code {
+  @apply bg-transparent p-0 text-inherit;
 }
 
 .interview-content ul,
 .interview-content ol {
-  @apply mb-4 pl-6;
+  @apply mb-6 pl-6;
+  margin-bottom: 1.5rem;
 }
 
 .interview-content li {
-  @apply mb-2;
+  @apply mb-2 leading-relaxed;
+}
+
+.interview-content strong {
+  @apply font-semibold text-foreground;
+}
+
+.interview-content table {
+  @apply my-8 w-full border-collapse rounded-lg border border-slate-300;
+  margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.interview-content th {
+  @apply border border-slate-300 bg-slate-100 p-4 text-left font-semibold text-slate-800;
+  background-color: #f8fafc;
+}
+
+.interview-content td {
+  @apply border border-slate-300 p-4 text-slate-700;
+}
+
+.interview-content tr:nth-child(even) td {
+  @apply bg-slate-50;
+}
+
+.interview-content tr:hover td {
+  @apply bg-slate-100;
 }
 
 .interview-content img {
-  @apply my-6 rounded-lg;
+  @apply my-8 rounded-xl shadow-lg;
+  margin: 2rem 0;
+}
+
+/* Interview Q&A styling */
+.interview-content p {
+  @apply mb-6 leading-relaxed;
+}
+
+.interview-content p strong {
+  @apply font-semibold;
+}
+
+/* Interviewer questions - subtle styling */
+.interview-content .question-paragraph {
+  @apply mb-4 border-l-2 border-slate-200 pl-4 text-slate-600;
+}
+
+.interview-content .question-paragraph strong {
+  @apply font-medium text-slate-700;
+}
+
+/* Interviewee responses - prominent styling */
+.interview-content .response-paragraph {
+  @apply mb-6 rounded-lg border-l-4 px-6 py-4;
+  background-color: hsl(var(--primary) / 0.05);
+  border-left-color: hsl(var(--primary));
+}
+
+.interview-content .response-paragraph strong {
+  @apply font-bold;
+  color: hsl(var(--primary));
+}
+
+/* Interview hero section */
+.interview-hero {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.interview-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(59, 130, 246, 0.1) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.person-image-container {
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.person-name {
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* CTA button styles */

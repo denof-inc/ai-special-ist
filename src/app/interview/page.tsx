@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { getAllInterviewArticles } from '@/lib/mdx'
 import { formatDate } from '@/lib/mdx'
 
-export default async function InterviewPage() {
+export default async function InterviewPage(): Promise<JSX.Element> {
   const articles = getAllInterviewArticles()
 
   return (
@@ -26,6 +26,7 @@ export default async function InterviewPage() {
               <div className="flex flex-col gap-6 lg:flex-row">
                 {article.featuredImage && (
                   <div className="lg:w-1/3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={article.featuredImage}
                       alt={article.title}

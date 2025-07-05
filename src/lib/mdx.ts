@@ -105,7 +105,7 @@ export function getInterviewArticleBySlug(
       },
     }
   } catch (error) {
-    console.error(`Error reading article ${slug}:`, error)
+    // Error reading article - handled by returning null
     return null
   }
 }
