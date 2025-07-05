@@ -30,9 +30,11 @@ jest.mock('next-mdx-remote/rsc', () => ({
 }))
 
 jest.mock('@/components/interview-content', () => ({
-  InterviewContent: ({ children }: { children: React.ReactNode }): JSX.Element => (
-    <div data-testid="interview-content">{children}</div>
-  ),
+  InterviewContent: ({
+    children,
+  }: {
+    children: React.ReactNode
+  }): JSX.Element => <div data-testid="interview-content">{children}</div>,
 }))
 
 jest.mock('@/components/mdx-components', () => ({

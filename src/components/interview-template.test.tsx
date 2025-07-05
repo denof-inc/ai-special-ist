@@ -73,7 +73,9 @@ describe('InterviewTemplate', () => {
       </InterviewTemplate>
     )
 
-    expect(screen.getByText('この記事について詳しく相談したい')).toBeInTheDocument()
+    expect(
+      screen.getByText('この記事について詳しく相談したい')
+    ).toBeInTheDocument()
     expect(screen.getByText('他のインタビュー記事')).toBeInTheDocument()
     expect(screen.getByText('無料相談を始める')).toBeInTheDocument()
     expect(screen.getByText('インタビュー一覧を見る')).toBeInTheDocument()
@@ -86,7 +88,9 @@ describe('InterviewTemplate', () => {
       </InterviewTemplate>
     )
 
-    const marker = container.querySelector('[data-template="standard-interview"]')
+    const marker = container.querySelector(
+      '[data-template="standard-interview"]'
+    )
     expect(marker).toBeInTheDocument()
   })
 })
@@ -115,7 +119,7 @@ describe('STANDARD_QUESTIONS', () => {
   it('covers all categories', () => {
     const categories = STANDARD_QUESTIONS.map(q => q.category)
     const uniqueCategories = new Set(categories)
-    
+
     expect(uniqueCategories.has('background')).toBe(true)
     expect(uniqueCategories.has('challenge')).toBe(true)
     expect(uniqueCategories.has('solution')).toBe(true)

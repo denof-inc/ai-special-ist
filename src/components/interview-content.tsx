@@ -6,7 +6,9 @@ interface InterviewContentProps {
   children: React.ReactNode
 }
 
-export function InterviewContent({ children }: InterviewContentProps): JSX.Element {
+export function InterviewContent({
+  children,
+}: InterviewContentProps): JSX.Element {
   useEffect(() => {
     // Add classes for styling
     const styleInterviewContent = (): void => {

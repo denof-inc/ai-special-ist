@@ -26,7 +26,10 @@ interface InterviewTemplateProps {
   children: React.ReactNode
 }
 
-export function InterviewTemplate({ data, children }: InterviewTemplateProps): JSX.Element {
+export function InterviewTemplate({
+  data,
+  children,
+}: InterviewTemplateProps): JSX.Element {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8">
       {/* Template marker for future identification */}
