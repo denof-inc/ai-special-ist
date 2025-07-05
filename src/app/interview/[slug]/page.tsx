@@ -19,37 +19,49 @@ export default async function InterviewArticlePage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-3xl">
         <div className="mb-8">
           <Link href="/interview" className="text-primary hover:underline">
             ← インタビュー一覧に戻る
           </Link>
         </div>
 
-        <article className="prose prose-lg max-w-none">
+        <article>
           <header className="mb-12">
-            <div className="mb-4 flex items-center gap-2">
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
                 {article.industry}
               </span>
               <span className="text-sm text-muted-foreground">
                 {formatDate(article.date)}
               </span>
               <span className="text-sm text-muted-foreground">
-                読了時間: {article.readingTime}分
+                読了時間 {article.readingTime}分
               </span>
             </div>
 
-            <h1 className="mb-6 text-4xl font-bold">{article.title}</h1>
+            <h1 className="mb-8 text-4xl font-bold leading-tight text-foreground">
+              {article.title}
+            </h1>
 
-            <div className="mb-6 flex items-center gap-4">
-              <span className="text-lg font-medium">{article.author}</span>
-              <span className="text-muted-foreground">@ {article.company}</span>
+            <div className="mb-8 rounded-lg bg-muted/50 p-6">
+              <div className="mb-4 flex items-center gap-4">
+                <div className="h-16 w-16 overflow-hidden rounded-full bg-gradient-to-br from-primary/20 to-primary/40">
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+                    alt={article.author}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold">{article.author}</h2>
+                  <p className="text-muted-foreground">{article.company}</p>
+                </div>
+              </div>
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                {article.excerpt}
+              </p>
             </div>
-
-            <p className="mb-8 text-xl text-muted-foreground">
-              {article.excerpt}
-            </p>
 
             <div className="mb-8 flex flex-wrap gap-2">
               {article.tags.map(tag => (
@@ -57,20 +69,18 @@ export default async function InterviewArticlePage({ params }: Props) {
                   key={tag}
                   className="rounded-full bg-secondary px-3 py-1 text-sm text-secondary-foreground"
                 >
-                  {tag}
+                  #{tag}
                 </span>
               ))}
             </div>
 
-            {article.featuredImage && (
-              <div className="mb-8">
-                <img
-                  src={article.featuredImage}
-                  alt={article.title}
-                  className="h-64 w-full rounded-lg object-cover"
-                />
-              </div>
-            )}
+            <div className="mb-12">
+              <img
+                src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&h=400&fit=crop"
+                alt={article.title}
+                className="h-64 w-full rounded-xl object-cover shadow-lg md:h-80"
+              />
+            </div>
           </header>
 
           <div className="interview-content">
