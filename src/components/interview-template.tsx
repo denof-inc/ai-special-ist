@@ -31,7 +31,7 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
     <div className="interview-template">
       {/* Template marker for future identification */}
       <div className="hidden" data-template="standard-interview" />
-      
+
       {/* Standard header structure */}
       <header className="interview-header mb-12">
         {/* Meta information */}
@@ -39,9 +39,7 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
           <span className="rounded bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
             {data.industry}
           </span>
-          <span className="text-sm text-muted-foreground">
-            {data.date}
-          </span>
+          <span className="text-sm text-muted-foreground">{data.date}</span>
           <span className="text-sm text-muted-foreground">
             読了時間 {data.readingTime}分
           </span>
@@ -61,7 +59,7 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
                 <div className="interview-avatar-placeholder h-full w-full bg-gradient-to-br from-primary/20 to-primary/40" />
               </div>
             </div>
-            
+
             <div className="flex-1">
               <h2 className="interview-person-name mb-2 text-2xl font-bold text-foreground">
                 {data.author}
@@ -88,9 +86,7 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
       </header>
 
       {/* Content area - Q&A will be structured here */}
-      <main className="interview-content">
-        {children}
-      </main>
+      <main className="interview-content">{children}</main>
 
       {/* Template footer with standardized CTA */}
       <footer className="interview-footer mt-16">
@@ -126,11 +122,11 @@ export function InterviewTemplate({ data, children }: InterviewTemplateProps) {
 // Standard question categories for template
 export const INTERVIEW_CATEGORIES = {
   BACKGROUND: 'background',
-  CHALLENGE: 'challenge', 
+  CHALLENGE: 'challenge',
   SOLUTION: 'solution',
   IMPLEMENTATION: 'implementation',
   RESULTS: 'results',
-  FUTURE: 'future'
+  FUTURE: 'future',
 } as const
 
 // Standard question templates
@@ -139,36 +135,36 @@ export const STANDARD_QUESTIONS: InterviewQuestion[] = [
     id: 'bg-01',
     category: INTERVIEW_CATEGORIES.BACKGROUND,
     question: 'まず、御社の事業内容について教えてください。',
-    order: 1
+    order: 1,
   },
   {
-    id: 'challenge-01', 
+    id: 'challenge-01',
     category: INTERVIEW_CATEGORIES.CHALLENGE,
     question: 'AI導入前にどのような課題を抱えていましたか？',
-    order: 2
+    order: 2,
   },
   {
     id: 'solution-01',
     category: INTERVIEW_CATEGORIES.SOLUTION,
     question: 'どのようなAIソリューションを選ばれましたか？',
-    order: 3
+    order: 3,
   },
   {
     id: 'implementation-01',
     category: INTERVIEW_CATEGORIES.IMPLEMENTATION,
     question: '導入プロセスについて詳しく教えてください。',
-    order: 4
+    order: 4,
   },
   {
     id: 'results-01',
     category: INTERVIEW_CATEGORIES.RESULTS,
     question: '導入後の具体的な成果について教えてください。',
-    order: 5
+    order: 5,
   },
   {
     id: 'future-01',
     category: INTERVIEW_CATEGORIES.FUTURE,
     question: '今後の展望について教えてください。',
-    order: 6
-  }
+    order: 6,
+  },
 ]

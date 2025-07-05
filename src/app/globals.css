@@ -83,7 +83,7 @@
 }
 
 .interview-content p {
-  @apply mb-6 leading-relaxed text-base;
+  @apply mb-6 text-base leading-relaxed;
   margin-bottom: 1.5rem;
 }
 
@@ -98,7 +98,7 @@
 }
 
 .interview-content code {
-  @apply rounded bg-slate-100 px-2 py-1 text-sm font-mono text-slate-800;
+  @apply rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-800;
 }
 
 .interview-content pre {
@@ -163,7 +163,7 @@
 
 /* Interviewer questions - subtle styling */
 .interview-content .question-paragraph {
-  @apply mb-4 pl-4 border-l-2 border-slate-200 text-slate-600;
+  @apply mb-4 border-l-2 border-slate-200 pl-4 text-slate-600;
 }
 
 .interview-content .question-paragraph strong {
@@ -172,7 +172,7 @@
 
 /* Interviewee responses - prominent styling */
 .interview-content .response-paragraph {
-  @apply mb-6 rounded-lg px-6 py-4 border-l-4;
+  @apply mb-6 rounded-lg border-l-4 px-6 py-4;
   background-color: hsl(var(--primary) / 0.05);
   border-left-color: hsl(var(--primary));
 }
@@ -194,7 +194,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(59, 130, 246, 0.1) 0%,
+    transparent 50%
+  );
   pointer-events: none;
 }
 
@@ -204,8 +208,13 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .person-name {

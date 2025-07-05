@@ -5,28 +5,26 @@ const mdxComponents: MDXComponents = {
   // Override table elements with styled versions
   table: ({ children, ...props }) => (
     <div className="my-8 overflow-x-auto">
-      <table className="w-full border-collapse rounded-lg border border-slate-300 shadow-sm" {...props}>
+      <table
+        className="w-full border-collapse rounded-lg border border-slate-300 shadow-sm"
+        {...props}
+      >
         {children}
       </table>
     </div>
   ),
-  thead: ({ children, ...props }) => (
-    <thead {...props}>
-      {children}
-    </thead>
-  ),
-  tbody: ({ children, ...props }) => (
-    <tbody {...props}>
-      {children}
-    </tbody>
-  ),
+  thead: ({ children, ...props }) => <thead {...props}>{children}</thead>,
+  tbody: ({ children, ...props }) => <tbody {...props}>{children}</tbody>,
   tr: ({ children, ...props }) => (
     <tr className="hover:bg-slate-50" {...props}>
       {children}
     </tr>
   ),
   th: ({ children, ...props }) => (
-    <th className="border border-slate-300 bg-slate-100 p-4 text-left font-semibold text-slate-800" {...props}>
+    <th
+      className="border border-slate-300 bg-slate-100 p-4 text-left font-semibold text-slate-800"
+      {...props}
+    >
       {children}
     </th>
   ),
@@ -42,7 +40,10 @@ const mdxComponents: MDXComponents = {
     </h1>
   ),
   h2: ({ children, ...props }) => (
-    <h2 className="mb-6 mt-12 border-b-2 border-slate-200 pb-2 text-2xl font-bold leading-tight" {...props}>
+    <h2
+      className="mb-6 mt-12 border-b-2 border-slate-200 pb-2 text-2xl font-bold leading-tight"
+      {...props}
+    >
       {children}
     </h2>
   ),
@@ -57,17 +58,26 @@ const mdxComponents: MDXComponents = {
     </p>
   ),
   blockquote: ({ children, ...props }) => (
-    <blockquote className="my-8 rounded-lg border-l-4 border-primary bg-primary/5 py-4 pl-6 pr-4 italic" {...props}>
+    <blockquote
+      className="my-8 rounded-lg border-l-4 border-primary bg-primary/5 py-4 pl-6 pr-4 italic"
+      {...props}
+    >
       {children}
     </blockquote>
   ),
   code: ({ children, ...props }) => (
-    <code className="rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-800" {...props}>
+    <code
+      className="rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-800"
+      {...props}
+    >
       {children}
     </code>
   ),
   pre: ({ children, ...props }) => (
-    <pre className="my-8 overflow-x-auto rounded-xl bg-slate-900 p-6 text-slate-100" {...props}>
+    <pre
+      className="my-8 overflow-x-auto rounded-xl bg-slate-900 p-6 text-slate-100"
+      {...props}
+    >
       {children}
     </pre>
   ),

@@ -12,7 +12,7 @@ export interface PersonInfo {
 export function generateAvatar(person: PersonInfo): string {
   const style = 'avataaars' // Professional style
   const seed = encodeURIComponent(person.name + person.company)
-  
+
   // Generate consistent avatar based on person info
   const params = new URLSearchParams({
     seed,
@@ -20,7 +20,7 @@ export function generateAvatar(person: PersonInfo): string {
     clothesColor: '1f2937', // Dark gray for professional look
     skinColor: 'fdbcb4', // Default skin tone
   })
-  
+
   return `https://api.dicebear.com/7.x/${style}/svg?${params.toString()}`
 }
 
@@ -38,23 +38,23 @@ export function generateTextAvatar(person: PersonInfo): string {
     .join('')
     .toUpperCase()
     .slice(0, 2)
-  
+
   const params = new URLSearchParams({
     name: initials,
     background: '3b82f6', // Primary blue
     color: 'ffffff',
     size: '200',
     bold: 'true',
-    format: 'svg'
+    format: 'svg',
   })
-  
+
   return `https://ui-avatars.com/api/?${params.toString()}`
 }
 
 // Fallback to Unsplash with professional business photos
 export function generateUnsplashAvatar(person: PersonInfo): string {
   const { gender = 'neutral', age = 'middle' } = person
-  
+
   const queries = {
     'male-young': 'young-businessman-professional-headshot',
     'male-middle': 'businessman-professional-portrait',
@@ -64,15 +64,20 @@ export function generateUnsplashAvatar(person: PersonInfo): string {
     'female-senior': 'senior-female-executive',
     'neutral-young': 'young-professional-headshot',
     'neutral-middle': 'professional-business-portrait',
-    'neutral-senior': 'senior-professional-executive'
+    'neutral-senior': 'senior-professional-executive',
   }
-  
-  const query = queries[`${gender}-${age}` as keyof typeof queries] || 'professional-business-portrait'
+
+  const query =
+    queries[`${gender}-${age}` as keyof typeof queries] ||
+    'professional-business-portrait'
   return `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&q=${encodeURIComponent(query)}`
 }
 
 // Main function to get avatar with fallback chain
-export function getPersonAvatar(person: PersonInfo, preferredMethod: 'dicebear' | 'text' | 'unsplash' = 'dicebear'): string {
+export function getPersonAvatar(
+  person: PersonInfo,
+  preferredMethod: 'dicebear' | 'text' | 'unsplash' = 'dicebear'
+): string {
   switch (preferredMethod) {
     case 'dicebear':
       return generateAvatar(person)

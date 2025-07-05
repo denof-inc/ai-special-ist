@@ -6,13 +6,19 @@ import { InterviewContent } from '@/components/interview-content'
 import mdxComponents from '@/components/mdx-components'
 import { Button } from '@/components/ui/button'
 import { parseMarkdownTable } from '@/lib/markdown-table'
-import { getAllInterviewArticles, getInterviewArticleBySlug, formatDate } from '@/lib/mdx'
+import {
+  getAllInterviewArticles,
+  getInterviewArticleBySlug,
+  formatDate,
+} from '@/lib/mdx'
 
 interface Props {
   params: { slug: string }
 }
 
-export default async function InterviewArticlePage({ params }: Props): Promise<JSX.Element> {
+export default async function InterviewArticlePage({
+  params,
+}: Props): Promise<JSX.Element> {
   const article = getInterviewArticleBySlug(params.slug)
 
   if (!article) {
@@ -49,7 +55,7 @@ export default async function InterviewArticlePage({ params }: Props): Promise<J
                 <h1 className="text-3xl font-bold leading-tight text-slate-900 md:text-4xl lg:text-5xl">
                   {article.title}
                 </h1>
-                
+
                 <div className="flex items-center gap-4">
                   <h2 className="text-2xl font-bold text-slate-800 md:text-3xl">
                     {article.author}
@@ -74,16 +80,28 @@ export default async function InterviewArticlePage({ params }: Props): Promise<J
                     </h3>
                     <div className="space-y-3">
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">氏名</span>
-                        <span className="text-sm font-medium text-slate-800">{article.author}</span>
+                        <span className="w-20 text-sm font-medium text-slate-600">
+                          氏名
+                        </span>
+                        <span className="text-sm font-medium text-slate-800">
+                          {article.author}
+                        </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">所属</span>
-                        <span className="text-sm text-slate-800">{article.company}</span>
+                        <span className="w-20 text-sm font-medium text-slate-600">
+                          所属
+                        </span>
+                        <span className="text-sm text-slate-800">
+                          {article.company}
+                        </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">業界</span>
-                        <span className="text-sm text-slate-800">{article.industry}</span>
+                        <span className="w-20 text-sm font-medium text-slate-600">
+                          業界
+                        </span>
+                        <span className="text-sm text-slate-800">
+                          {article.industry}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -97,15 +115,25 @@ export default async function InterviewArticlePage({ params }: Props): Promise<J
                     </h3>
                     <div className="space-y-3">
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">会社名</span>
-                        <span className="text-sm font-medium text-slate-800">{article.company}</span>
+                        <span className="w-20 text-sm font-medium text-slate-600">
+                          会社名
+                        </span>
+                        <span className="text-sm font-medium text-slate-800">
+                          {article.company}
+                        </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">業界</span>
-                        <span className="text-sm text-slate-800">{article.industry}</span>
+                        <span className="w-20 text-sm font-medium text-slate-600">
+                          業界
+                        </span>
+                        <span className="text-sm text-slate-800">
+                          {article.industry}
+                        </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">タグ</span>
+                        <span className="w-20 text-sm font-medium text-slate-600">
+                          タグ
+                        </span>
                         <div className="flex flex-wrap gap-1">
                           {article.tags.slice(0, 3).map(tag => (
                             <span
@@ -132,10 +160,7 @@ export default async function InterviewArticlePage({ params }: Props): Promise<J
           </header>
 
           <InterviewContent>
-            <MDXRemote 
-              source={processedContent} 
-              components={mdxComponents}
-            />
+            <MDXRemote source={processedContent} components={mdxComponents} />
           </InterviewContent>
         </article>
 

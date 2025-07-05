@@ -14,17 +14,17 @@ export function InterviewContent({ children }: InterviewContentProps) {
       if (!content) return
 
       const paragraphs = content.querySelectorAll('p')
-      
-      paragraphs.forEach((p) => {
+
+      paragraphs.forEach(p => {
         const strongElement = p.querySelector('strong:first-child')
         if (!strongElement) return
 
         const text = strongElement.textContent || ''
-        
+
         // Check if it's an interviewer question (contains ──)
         if (text.includes('──')) {
           p.classList.add('question-paragraph')
-        } 
+        }
         // Check if it's an interviewee response (contains さん：)
         else if (text.includes('さん：')) {
           p.classList.add('response-paragraph')
