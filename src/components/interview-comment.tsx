@@ -25,12 +25,11 @@ export function InterviewComment({
       <div className="flex-shrink-0">
         <div
           className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold text-white ${
-            isInterviewer
-              ? 'bg-blue-500'
-              : 'bg-green-500'
+            isInterviewer ? 'bg-blue-500' : 'bg-green-500'
           }`}
         >
           {avatar ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={avatar}
               alt={author}
