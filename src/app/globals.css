@@ -144,10 +144,9 @@
   margin: 2rem 0;
 }
 
-/* Interview Q&A styling */
-.interview-content p:has(strong:first-child):has(strong:last-child) {
-  @apply mb-4 rounded-lg bg-blue-50 px-4 py-3 font-medium text-blue-900;
-  border-left: 4px solid #3b82f6;
+/* Interview Q&A styling - handled by JavaScript component */
+.interview-content p strong {
+  @apply font-semibold;
 }
 
 /* CTA button styles */

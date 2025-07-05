@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 
 import { Button } from '@/components/ui/button'
+import { InterviewContent } from '@/components/interview-content'
 import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
 import { formatDate } from '@/lib/mdx'
 
@@ -83,9 +84,9 @@ export default async function InterviewArticlePage({ params }: Props) {
             </div>
           </header>
 
-          <div className="interview-content">
+          <InterviewContent>
             <MDXRemote source={article.content} />
-          </div>
+          </InterviewContent>
         </article>
 
         <div className="mt-16 rounded-lg bg-muted/50 p-8">
