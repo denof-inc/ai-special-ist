@@ -4,6 +4,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 
 import { Button } from '@/components/ui/button'
 import { InterviewContent } from '@/components/interview-content'
+import mdxComponents from '@/components/mdx-components'
+import { parseMarkdownTable } from '@/lib/markdown-table'
 import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
 import { formatDate } from '@/lib/mdx'
 
@@ -17,6 +19,9 @@ export default async function InterviewArticlePage({ params }: Props) {
   if (!article) {
     notFound()
   }
+
+  // Process markdown tables in content
+  const processedContent = parseMarkdownTable(article.content)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -85,7 +90,10 @@ export default async function InterviewArticlePage({ params }: Props) {
           </header>
 
           <InterviewContent>
-            <MDXRemote source={article.content} />
+            <MDXRemote 
+              source={processedContent} 
+              components={mdxComponents}
+            />
           </InterviewContent>
         </article>
 
