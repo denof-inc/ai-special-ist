@@ -42,73 +42,101 @@ export default async function InterviewArticlePage({ params }: Props) {
 
         <article>
           <header className="mb-12">
-            {/* Clean Interview Header - Challenge Plus Style */}
-            <div className="mb-12">
-              {/* Meta info */}
-              <div className="mb-6 flex flex-wrap items-center gap-3">
-                <span className="rounded bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
-                  {article.industry}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {formatDate(article.date)}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  読了時間 {article.readingTime}分
-                </span>
+            {/* Hero Image - Full Width */}
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1400&h=600&fit=crop&crop=face"
+                alt={`${article.author}氏のインタビュー`}
+                className="h-80 w-full object-cover object-center md:h-96 lg:h-[500px]"
+              />
+            </div>
+
+            {/* Article Header Content - Below Image */}
+            <div className="mt-8 space-y-8">
+              {/* Title and Interviewee Name - v-tsushin style */}
+              <div className="space-y-4">
+                <h1 className="text-3xl font-bold leading-tight text-slate-900 md:text-4xl lg:text-5xl">
+                  {article.title}
+                </h1>
+                
+                <div className="flex items-center gap-4">
+                  <h2 className="text-2xl font-bold text-slate-800 md:text-3xl">
+                    {article.author}
+                  </h2>
+                  <div className="flex items-center gap-3 text-sm text-slate-600">
+                    <span className="rounded bg-slate-100 px-3 py-1 font-medium">
+                      {article.industry}
+                    </span>
+                    <span>{formatDate(article.date)}</span>
+                    <span>読了時間 {article.readingTime}分</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Main headline */}
-              <h1 className="mb-8 text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
-                {article.title}
-              </h1>
-
-              {/* Person profile section */}
-              <div className="mb-10 border-l-4 border-primary bg-slate-50 p-6">
-                <div className="flex flex-col items-start gap-6 md:flex-row">
-                  {/* Auto-generated professional avatar */}
-                  <div className="flex-shrink-0">
-                    <div className="h-24 w-24 overflow-hidden rounded-lg bg-slate-200 md:h-32 md:w-32">
-                      <img
-                        src={avatarUrl}
-                        alt={article.author}
-                        className="h-full w-full object-cover"
-                      />
+              {/* Profile and Company Data Section - Challenge+ style */}
+              <div className="grid gap-8 md:grid-cols-2">
+                {/* Left: Profile */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="mb-4 text-lg font-bold text-slate-800 border-b-2 border-slate-200 pb-2">
+                      PROFILE
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex">
+                        <span className="w-20 text-sm font-medium text-slate-600">氏名</span>
+                        <span className="text-sm text-slate-800 font-medium">{article.author}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="w-20 text-sm font-medium text-slate-600">所属</span>
+                        <span className="text-sm text-slate-800">{article.company}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="w-20 text-sm font-medium text-slate-600">業界</span>
+                        <span className="text-sm text-slate-800">{article.industry}</span>
+                      </div>
                     </div>
                   </div>
-                  
-                  {/* Person info */}
-                  <div className="flex-1">
-                    <h2 className="mb-2 text-2xl font-bold text-foreground">
-                      {article.author}
-                    </h2>
-                    <p className="mb-3 text-lg font-semibold text-primary">
-                      {article.company}
-                    </p>
-                    <p className="leading-relaxed text-muted-foreground">
-                      {article.excerpt}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {article.tags.slice(0, 4).map(tag => (
-                        <span
-                          key={tag}
-                          className="rounded bg-primary/10 px-2 py-1 text-xs font-medium text-primary"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                </div>
+
+                {/* Right: Company Data */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="mb-4 text-lg font-bold text-slate-800 border-b-2 border-slate-200 pb-2">
+                      COMPANY DATA
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex">
+                        <span className="w-20 text-sm font-medium text-slate-600">会社名</span>
+                        <span className="text-sm text-slate-800 font-medium">{article.company}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="w-20 text-sm font-medium text-slate-600">業界</span>
+                        <span className="text-sm text-slate-800">{article.industry}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="w-20 text-sm font-medium text-slate-600">タグ</span>
+                        <div className="flex flex-wrap gap-1">
+                          {article.tags.slice(0, 3).map(tag => (
+                            <span
+                              key={tag}
+                              className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Feature Image - Secondary */}
-            <div className="mb-12">
-              <img
-                src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&h=600&fit=crop"
-                alt={article.title}
-                className="h-64 w-full rounded-xl object-cover shadow-lg md:h-80 lg:h-96"
-              />
+              {/* Interview Introduction */}
+              <div className="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-6">
+                <p className="text-base leading-relaxed text-slate-700">
+                  {article.excerpt}
+                </p>
+              </div>
             </div>
           </header>
 
