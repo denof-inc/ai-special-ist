@@ -180,8 +180,21 @@ export async function generateMetadata({ params }: Props): Promise<{
   title: string
   description: string
   keywords?: string[]
-  openGraph?: any
-  twitter?: any
+  openGraph?: {
+    title: string
+    description: string
+    type: string
+    publishedTime: string
+    authors: string[]
+    tags: string[]
+    images?: string[]
+  }
+  twitter?: {
+    card: string
+    title: string
+    description: string
+    images?: string[]
+  }
 }> {
   const article = getInterviewArticleBySlug(params.slug)
 

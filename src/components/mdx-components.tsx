@@ -42,7 +42,7 @@ const mdxComponents: MDXComponents = {
     </h1>
   ),
   h2: ({ children, ...props }) => (
-    <h2 className="mb-6 mt-12 text-2xl font-bold leading-tight border-b-2 border-slate-200 pb-2" {...props}>
+    <h2 className="mb-6 mt-12 border-b-2 border-slate-200 pb-2 text-2xl font-bold leading-tight" {...props}>
       {children}
     </h2>
   ),
@@ -52,7 +52,7 @@ const mdxComponents: MDXComponents = {
     </h3>
   ),
   p: ({ children, ...props }) => (
-    <p className="mb-6 leading-relaxed text-base" {...props}>
+    <p className="mb-6 text-base leading-relaxed" {...props}>
       {children}
     </p>
   ),
@@ -62,7 +62,7 @@ const mdxComponents: MDXComponents = {
     </blockquote>
   ),
   code: ({ children, ...props }) => (
-    <code className="rounded bg-slate-100 px-2 py-1 text-sm font-mono text-slate-800" {...props}>
+    <code className="rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-800" {...props}>
       {children}
     </code>
   ),
@@ -72,12 +72,12 @@ const mdxComponents: MDXComponents = {
     </pre>
   ),
   ul: ({ children, ...props }) => (
-    <ul className="mb-6 pl-6 list-disc" {...props}>
+    <ul className="mb-6 list-disc pl-6" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, ...props }) => (
-    <ol className="mb-6 pl-6 list-decimal" {...props}>
+    <ol className="mb-6 list-decimal pl-6" {...props}>
       {children}
     </ol>
   ),
