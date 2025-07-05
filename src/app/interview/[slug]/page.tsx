@@ -20,7 +20,7 @@ export default async function InterviewArticlePage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-4xl">
         <div className="mb-8">
           <Link href="/interview" className="text-primary hover:underline">
             ← インタビュー一覧に戻る

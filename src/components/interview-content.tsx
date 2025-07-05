@@ -8,7 +8,7 @@ interface InterviewContentProps {
 
 export function InterviewContent({ children }: InterviewContentProps) {
   useEffect(() => {
-    // Style interview Q&A after content loads
+    // Add classes for styling
     const styleInterviewContent = () => {
       const content = document.querySelector('.interview-content')
       if (!content) return
@@ -23,23 +23,17 @@ export function InterviewContent({ children }: InterviewContentProps) {
         
         // Check if it's an interviewer question (contains ──)
         if (text.includes('──')) {
-          p.className = 'mb-4 pl-4 border-l-2 border-slate-200 text-slate-600'
-          strongElement.className = 'font-medium text-slate-700'
+          p.classList.add('question-paragraph')
         } 
         // Check if it's an interviewee response (contains さん：)
         else if (text.includes('さん：')) {
-          p.className = 'mb-6 rounded-lg bg-primary/5 px-6 py-4 border-l-4 border-primary text-foreground'
-          p.style.borderLeftColor = 'hsl(var(--primary))'
-          p.style.backgroundColor = 'hsl(var(--primary) / 0.05)'
-          strongElement.className = 'font-bold text-primary'
-          strongElement.style.color = 'hsl(var(--primary))'
+          p.classList.add('response-paragraph')
         }
       })
     }
 
-    // Run immediately and after a short delay to ensure content is rendered
-    styleInterviewContent()
-    const timer = setTimeout(styleInterviewContent, 100)
+    // Run after a delay to ensure MDX content is rendered
+    const timer = setTimeout(styleInterviewContent, 300)
 
     return () => clearTimeout(timer)
   }, [children])

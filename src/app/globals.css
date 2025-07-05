@@ -61,6 +61,8 @@
 /* Interview article specific styles */
 .interview-content {
   line-height: 1.8;
+  max-width: 65ch;
+  margin: 0 auto;
 }
 
 .interview-content h1 {
@@ -81,7 +83,7 @@
 }
 
 .interview-content p {
-  @apply mb-6 leading-relaxed;
+  @apply mb-6 leading-relaxed text-base;
   margin-bottom: 1.5rem;
 }
 
@@ -123,20 +125,26 @@
 }
 
 .interview-content table {
-  @apply my-8 w-full border-collapse overflow-hidden rounded-lg border border-border;
+  @apply my-8 w-full border-collapse rounded-lg border border-slate-300;
   margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .interview-content th {
-  @apply border border-border bg-muted/80 p-4 text-left font-semibold;
+  @apply border border-slate-300 bg-slate-100 p-4 text-left font-semibold text-slate-800;
+  background-color: #f8fafc;
 }
 
 .interview-content td {
-  @apply border border-border p-4;
+  @apply border border-slate-300 p-4 text-slate-700;
 }
 
-.interview-content tr:nth-child(even) {
-  @apply bg-muted/30;
+.interview-content tr:nth-child(even) td {
+  @apply bg-slate-50;
+}
+
+.interview-content tr:hover td {
+  @apply bg-slate-100;
 }
 
 .interview-content img {
@@ -144,9 +152,34 @@
   margin: 2rem 0;
 }
 
-/* Interview Q&A styling - handled by JavaScript component */
+/* Interview Q&A styling */
+.interview-content p {
+  @apply mb-6 leading-relaxed;
+}
+
 .interview-content p strong {
   @apply font-semibold;
+}
+
+/* Interviewer questions - subtle styling */
+.interview-content .question-paragraph {
+  @apply mb-4 pl-4 border-l-2 border-slate-200 text-slate-600;
+}
+
+.interview-content .question-paragraph strong {
+  @apply font-medium text-slate-700;
+}
+
+/* Interviewee responses - prominent styling */
+.interview-content .response-paragraph {
+  @apply mb-6 rounded-lg px-6 py-4 border-l-4;
+  background-color: hsl(var(--primary) / 0.05);
+  border-left-color: hsl(var(--primary));
+}
+
+.interview-content .response-paragraph strong {
+  @apply font-bold;
+  color: hsl(var(--primary));
 }
 
 /* CTA button styles */
