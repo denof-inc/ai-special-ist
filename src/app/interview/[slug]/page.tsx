@@ -23,6 +23,7 @@ export default async function InterviewArticlePage({
 
   if (!article) {
     notFound()
+    return null // TypeScript requires return after notFound() for tests
   }
 
   // Process markdown tables in content
