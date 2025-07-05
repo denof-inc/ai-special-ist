@@ -58,11 +58,25 @@
   }
 }
 
-/* Interview article specific styles */
+/* Interview article specific styles - Responsive optimized */
 .interview-content {
   line-height: 1.8;
-  max-width: 65ch;
+  max-width: none;
   margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .interview-content {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .interview-content {
+    max-width: 75ch;
+    padding: 0;
+  }
 }
 
 .interview-content h1 {
@@ -145,6 +159,33 @@
 
 .interview-content tr:hover td {
   @apply bg-slate-100;
+}
+
+/* Interview conversation styles - Enhanced with responsive design */
+.interview-question {
+  @apply mb-6 rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 shadow-sm transition-all duration-200 hover:shadow-md;
+}
+
+.interview-question strong {
+  @apply text-blue-700 font-semibold flex items-center gap-2 flex-wrap;
+}
+
+.interview-question strong::before {
+  content: "Q";
+  @apply flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white flex-shrink-0;
+}
+
+.interview-response {
+  @apply mb-6 rounded-lg border-l-4 border-green-500 bg-green-50 p-4 shadow-sm transition-all duration-200 hover:shadow-md;
+}
+
+.interview-response strong {
+  @apply text-green-700 font-semibold flex items-center gap-2 flex-wrap;
+}
+
+.interview-response strong::before {
+  content: "A";
+  @apply flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white flex-shrink-0;
 }
 
 .interview-content img {

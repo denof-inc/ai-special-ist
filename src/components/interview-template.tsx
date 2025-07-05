@@ -31,7 +31,7 @@ export function InterviewTemplate({
   children,
 }: InterviewTemplateProps): JSX.Element {
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8">
       {/* Template marker for future identification */}
       <div className="hidden" data-template="standard-interview" />
 
