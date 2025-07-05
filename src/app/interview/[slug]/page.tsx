@@ -2,19 +2,17 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 
-import { Button } from '@/components/ui/button'
 import { InterviewContent } from '@/components/interview-content'
 import mdxComponents from '@/components/mdx-components'
+import { Button } from '@/components/ui/button'
 import { parseMarkdownTable } from '@/lib/markdown-table'
-import { getPersonAvatar } from '@/lib/avatar-generator'
-import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
-import { formatDate } from '@/lib/mdx'
+import { getAllInterviewArticles, getInterviewArticleBySlug, formatDate } from '@/lib/mdx'
 
 interface Props {
   params: { slug: string }
 }
 
-export default async function InterviewArticlePage({ params }: Props) {
+export default async function InterviewArticlePage({ params }: Props): Promise<JSX.Element> {
   const article = getInterviewArticleBySlug(params.slug)
 
   if (!article) {
@@ -23,13 +21,6 @@ export default async function InterviewArticlePage({ params }: Props) {
 
   // Process markdown tables in content
   const processedContent = parseMarkdownTable(article.content)
-
-  // Generate avatar for the person
-  const avatarUrl = getPersonAvatar({
-    name: article.author,
-    company: article.company,
-    industry: article.industry
-  }, 'text') // Using text-based avatar for simplicity
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -78,13 +69,13 @@ export default async function InterviewArticlePage({ params }: Props) {
                 {/* Left: Profile */}
                 <div className="space-y-6">
                   <div>
-                    <h3 className="mb-4 text-lg font-bold text-slate-800 border-b-2 border-slate-200 pb-2">
+                    <h3 className="mb-4 border-b-2 border-slate-200 pb-2 text-lg font-bold text-slate-800">
                       PROFILE
                     </h3>
                     <div className="space-y-3">
                       <div className="flex">
                         <span className="w-20 text-sm font-medium text-slate-600">氏名</span>
-                        <span className="text-sm text-slate-800 font-medium">{article.author}</span>
+                        <span className="text-sm font-medium text-slate-800">{article.author}</span>
                       </div>
                       <div className="flex">
                         <span className="w-20 text-sm font-medium text-slate-600">所属</span>
@@ -101,13 +92,13 @@ export default async function InterviewArticlePage({ params }: Props) {
                 {/* Right: Company Data */}
                 <div className="space-y-6">
                   <div>
-                    <h3 className="mb-4 text-lg font-bold text-slate-800 border-b-2 border-slate-200 pb-2">
+                    <h3 className="mb-4 border-b-2 border-slate-200 pb-2 text-lg font-bold text-slate-800">
                       COMPANY DATA
                     </h3>
                     <div className="space-y-3">
                       <div className="flex">
                         <span className="w-20 text-sm font-medium text-slate-600">会社名</span>
-                        <span className="text-sm text-slate-800 font-medium">{article.company}</span>
+                        <span className="text-sm font-medium text-slate-800">{article.company}</span>
                       </div>
                       <div className="flex">
                         <span className="w-20 text-sm font-medium text-slate-600">業界</span>
@@ -178,14 +169,20 @@ export default async function InterviewArticlePage({ params }: Props) {
   )
 }
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const articles = getAllInterviewArticles()
   return articles.map(article => ({
     slug: article.slug,
   }))
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<{
+  title: string
+  description: string
+  keywords?: string[]
+  openGraph?: any
+  twitter?: any
+}> {
   const article = getInterviewArticleBySlug(params.slug)
 
   if (!article) {
