@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { InterviewContent } from '@/components/interview-content'
 import mdxComponents from '@/components/mdx-components'
 import { parseMarkdownTable } from '@/lib/markdown-table'
+import { getPersonAvatar } from '@/lib/avatar-generator'
 import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
 import { formatDate } from '@/lib/mdx'
 
@@ -23,6 +24,13 @@ export default async function InterviewArticlePage({ params }: Props) {
   // Process markdown tables in content
   const processedContent = parseMarkdownTable(article.content)
 
+  // Generate avatar for the person
+  const avatarUrl = getPersonAvatar({
+    name: article.author,
+    company: article.company,
+    industry: article.industry
+  }, 'text') // Using text-based avatar for simplicity
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mx-auto max-w-4xl">
@@ -34,63 +42,60 @@ export default async function InterviewArticlePage({ params }: Props) {
 
         <article>
           <header className="mb-12">
-            {/* Hero Section - Person-focused */}
+            {/* Clean Interview Header - Challenge Plus Style */}
             <div className="mb-12">
-              <div className="interview-hero relative overflow-hidden rounded-2xl p-8 md:p-12">
-                <div className="grid gap-8 md:grid-cols-2 md:items-center">
-                  {/* Person Image - Left side, large */}
-                  <div className="person-image-container">
-                    <div className="aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-primary/40 shadow-2xl">
+              {/* Meta info */}
+              <div className="mb-6 flex flex-wrap items-center gap-3">
+                <span className="rounded bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
+                  {article.industry}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {formatDate(article.date)}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  読了時間 {article.readingTime}分
+                </span>
+              </div>
+
+              {/* Main headline */}
+              <h1 className="mb-8 text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
+                {article.title}
+              </h1>
+
+              {/* Person profile section */}
+              <div className="mb-10 border-l-4 border-primary bg-slate-50 p-6">
+                <div className="flex flex-col items-start gap-6 md:flex-row">
+                  {/* Auto-generated professional avatar */}
+                  <div className="flex-shrink-0">
+                    <div className="h-24 w-24 overflow-hidden rounded-lg bg-slate-200 md:h-32 md:w-32">
                       <img
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
+                        src={avatarUrl}
                         alt={article.author}
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    {/* Decorative elements */}
-                    <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-primary/10"></div>
-                    <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-primary/20"></div>
                   </div>
-
-                  {/* Person Info - Right side */}
-                  <div className="text-center md:text-left">
-                    <div className="mb-4 flex flex-wrap justify-center md:justify-start gap-2">
-                      <span className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-                        {article.industry}
-                      </span>
-                      <span className="rounded-full bg-slate-200 px-3 py-1 text-sm text-slate-600">
-                        {formatDate(article.date)}
-                      </span>
-                    </div>
-
-                    <h1 className="person-name mb-4 text-3xl font-bold md:text-4xl lg:text-5xl">
+                  
+                  {/* Person info */}
+                  <div className="flex-1">
+                    <h2 className="mb-2 text-2xl font-bold text-foreground">
                       {article.author}
-                    </h1>
-                    
-                    <p className="mb-6 text-xl text-primary font-semibold">
+                    </h2>
+                    <p className="mb-3 text-lg font-semibold text-primary">
                       {article.company}
                     </p>
-
-                    <h2 className="mb-6 text-xl leading-tight text-slate-700 md:text-2xl">
-                      {article.title}
-                    </h2>
-
-                    <p className="text-lg leading-relaxed text-slate-600">
+                    <p className="leading-relaxed text-muted-foreground">
                       {article.excerpt}
                     </p>
-
-                    <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-2">
-                      {article.tags.slice(0, 3).map(tag => (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {article.tags.slice(0, 4).map(tag => (
                         <span
                           key={tag}
-                          className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary font-medium"
+                          className="rounded bg-primary/10 px-2 py-1 text-xs font-medium text-primary"
                         >
-                          #{tag}
+                          {tag}
                         </span>
                       ))}
-                      <span className="text-sm text-slate-500 flex items-center">
-                        読了時間 {article.readingTime}分
-                      </span>
                     </div>
                   </div>
                 </div>
