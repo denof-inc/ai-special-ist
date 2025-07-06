@@ -7,10 +7,33 @@ import { earlyAccessSchema } from '@/lib/validations/early-access'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const body = await request.json()
+    // リクエストボディの解析
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: '不正なリクエスト形式です。',
+        },
+        { status: 400 }
+      )
+    }
 
     // バリデーション
-    const validatedData = earlyAccessSchema.parse(body)
+    let validatedData
+    try {
+      validatedData = earlyAccessSchema.parse(body)
+    } catch (validationError) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'メールアドレスの形式が正しくありません。',
+        },
+        { status: 400 }
+      )
+    }
 
     // IPアドレスとUser-Agentを取得
     const ipAddress =
@@ -27,20 +50,42 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const utmCampaign = url.searchParams.get('utm_campaign')
 
     // データベースに保存
-    const registration = await prisma.earlyAccessRegistration.create({
-      data: {
-        email: validatedData.email,
-        name: validatedData.name,
-        message: validatedData.message,
-        source: 'landing_page',
-        utmSource,
-        utmMedium,
-        utmCampaign,
-        ipAddress,
-        userAgent,
-        unsubscribeToken: crypto.randomUUID(),
-      },
-    })
+    let registration
+    try {
+      registration = await prisma.earlyAccessRegistration.create({
+        data: {
+          email: validatedData.email,
+          name: validatedData.name,
+          message: validatedData.message,
+          source: 'landing_page',
+          utmSource,
+          utmMedium,
+          utmCampaign,
+          ipAddress,
+          userAgent,
+          unsubscribeToken: crypto.randomUUID(),
+        },
+      })
+    } catch (dbError) {
+      if (dbError instanceof Error && dbError.message.includes('Unique constraint')) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'このメールアドレスは既に登録されています。',
+          },
+          { status: 409 }
+        )
+      }
+      
+      logger.error('Database error during registration', dbError)
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'データベースエラーが発生しました。しばらく時間をおいて再度お試しください。',
+        },
+        { status: 500 }
+      )
+    }
 
     // 自動返信メール送信
     try {
@@ -74,22 +119,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       message: '先行登録が完了しました！確認メールをお送りしています。',
     })
   } catch (error) {
-    if (error instanceof Error && error.message.includes('Unique constraint')) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'このメールアドレスは既に登録されています。',
-        },
-        { status: 409 }
-      )
-    }
-
-    logger.error('Early access registration failed', error)
+    logger.error('Unexpected error during early access registration', error)
 
     return NextResponse.json(
       {
         success: false,
-        message: '登録に失敗しました。しばらく時間をおいて再度お試しください。',
+        message: '予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。',
       },
       { status: 500 }
     )
