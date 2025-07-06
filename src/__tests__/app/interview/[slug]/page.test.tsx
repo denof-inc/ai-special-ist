@@ -1,12 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import { notFound } from 'next/navigation'
 
-import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
-
 import InterviewArticlePage, {
   generateStaticParams,
   generateMetadata,
-} from './page'
+} from '@/app/interview/[slug]/page'
+import { getInterviewArticleBySlug, getAllInterviewArticles } from '@/lib/mdx'
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({

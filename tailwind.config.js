@@ -64,19 +64,6 @@ module.exports = {
           800: '#9D174D',
           900: '#831843',
         },
-        // Orange/Coral complement
-        tertiary: {
-          50: '#FFF7ED',
-          100: '#FFEDD5',
-          200: '#FED7AA',
-          300: '#FDBA74',
-          400: '#FB923C',
-          500: '#F97316',
-          600: '#EA580C',
-          700: '#C2410C',
-          800: '#9A3412',
-          900: '#7C2D12',
-        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -84,7 +71,7 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       backgroundImage: {
-        // Primary gradient system - Pink to Purple (TURNING POINT style)
+        // Primary gradient system - Pink to Purple premium theme
         'gradient-primary':
           'linear-gradient(135deg, #EC4899 0%, #C084FC 50%, #8B5CF6 100%)',
         'gradient-primary-subtle':
@@ -92,7 +79,7 @@ module.exports = {
         'gradient-primary-intense':
           'linear-gradient(135deg, #DB2777 0%, #A855F7 50%, #7C3AED 100%)',
 
-        // Accent gradient system - Current blue system
+        // Accent gradient system - Blue theme
         'gradient-accent':
           'linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #60A5FA 100%)',
         'gradient-accent-subtle':

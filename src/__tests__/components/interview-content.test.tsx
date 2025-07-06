@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 
-import { InterviewContent } from './interview-content'
+import { InterviewContent } from '@/components/interview-content'
 
 describe('InterviewContent', () => {
   it('renders children correctly', () => {

@@ -1,4 +1,4 @@
-import { parseMarkdownTable } from './markdown-table'
+import { parseMarkdownTable } from '@/lib/markdown-table'
 
 describe('Markdown Table Parser', () => {
   it('converts simple markdown table to HTML', () => {

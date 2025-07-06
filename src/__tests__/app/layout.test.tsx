@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 
-import RootLayout from './layout'
+import RootLayout from '@/app/layout'
 
 // Mock Next.js font imports
 jest.mock('next/font/google', () => ({
