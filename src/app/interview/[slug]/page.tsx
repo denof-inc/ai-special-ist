@@ -52,95 +52,100 @@ export default async function InterviewArticlePage({
 
             {/* Article Header Content - Below Image */}
             <div className="mt-8 space-y-8">
-              {/* Title and Interviewee Name - v-tsushin style */}
-              <div className="space-y-4">
-                <h1 className="text-3xl font-bold leading-tight text-slate-900 md:text-4xl lg:text-5xl">
+              {/* Title and Interviewee Name - Premium Gradient Style */}
+              <div className="space-y-6">
+                <h1 className="text-gradient-primary text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
                   {article.title}
                 </h1>
 
-                <div className="flex items-center gap-4">
-                  <h2 className="text-2xl font-bold text-slate-800 md:text-3xl">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+                  <h2 className="text-gradient-primary-intense text-3xl font-bold md:text-4xl">
                     {article.author}
                   </h2>
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <span className="rounded bg-slate-100 px-3 py-1 font-medium">
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <span className="btn-gradient-accent rounded-full px-4 py-2 text-xs font-semibold">
                       {article.industry}
                     </span>
-                    <span>{formatDate(article.date)}</span>
-                    <span>読了時間 {article.readingTime}分</span>
+                    <span className="text-gradient-accent font-medium">
+                      {formatDate(article.date)}
+                    </span>
+                    <span className="text-gradient-primary font-medium">
+                      読了時間 {article.readingTime}分
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Profile and Company Data Section - Challenge+ style */}
+              {/* Profile and Company Data Section - Light Mode Cards */}
               <div className="grid gap-8 md:grid-cols-2">
                 {/* Left: Profile */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="mb-4 border-b-2 border-slate-200 pb-2 text-lg font-bold text-slate-800">
+                <div className="card-gradient-primary rounded-2xl p-6">
+                  <div className="relative z-10">
+                    <h3 className="text-gradient-primary mb-6 text-xl font-bold">
                       PROFILE
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">
+                        <span className="w-20 text-sm font-medium text-gray-600">
                           氏名
                         </span>
-                        <span className="text-sm font-medium text-slate-800">
+                        <span className="text-gradient-primary-intense text-sm font-bold">
                           {article.author}
                         </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">
+                        <span className="w-20 text-sm font-medium text-gray-600">
                           所属
                         </span>
-                        <span className="text-sm text-slate-800">
+                        <span className="text-gradient-accent text-sm font-semibold">
                           {article.company}
                         </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">
+                        <span className="w-20 text-sm font-medium text-gray-600">
                           業界
                         </span>
-                        <span className="text-sm text-slate-800">
+                        <span className="text-sm font-medium text-gray-800">
                           {article.industry}
                         </span>
                       </div>
                     </div>
                   </div>
+                  <div className="border-gradient-primary absolute inset-0 rounded-2xl"></div>
                 </div>
 
                 {/* Right: Company Data */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="mb-4 border-b-2 border-slate-200 pb-2 text-lg font-bold text-slate-800">
+                <div className="card-gradient-accent rounded-2xl p-6">
+                  <div className="relative z-10">
+                    <h3 className="text-gradient-accent mb-6 text-xl font-bold">
                       COMPANY DATA
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">
+                        <span className="w-20 text-sm font-medium text-gray-600">
                           会社名
                         </span>
-                        <span className="text-sm font-medium text-slate-800">
+                        <span className="text-gradient-accent-intense text-sm font-bold">
                           {article.company}
                         </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">
+                        <span className="w-20 text-sm font-medium text-gray-600">
                           業界
                         </span>
-                        <span className="text-sm text-slate-800">
+                        <span className="text-sm font-medium text-gray-800">
                           {article.industry}
                         </span>
                       </div>
                       <div className="flex">
-                        <span className="w-20 text-sm font-medium text-slate-600">
+                        <span className="w-20 text-sm font-medium text-gray-600">
                           タグ
                         </span>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-2">
                           {article.tags.slice(0, 3).map(tag => (
                             <span
                               key={tag}
-                              className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700"
+                              className="btn-gradient-accent rounded-full px-3 py-1 text-xs font-semibold"
                             >
                               {tag}
                             </span>
@@ -149,14 +154,24 @@ export default async function InterviewArticlePage({
                       </div>
                     </div>
                   </div>
+                  <div className="border-gradient-accent absolute inset-0 rounded-2xl"></div>
                 </div>
               </div>
 
-              {/* Interview Introduction */}
-              <div className="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-6">
-                <p className="text-base leading-relaxed text-slate-700">
-                  {article.excerpt}
-                </p>
+              {/* Interview Introduction - Light Mode Premium Quote Style */}
+              <div className="card-gradient-primary relative overflow-hidden rounded-2xl p-8">
+                <div className="relative z-10">
+                  <div className="mb-4 flex items-center">
+                    <div className="mr-4 h-8 w-8 rounded-lg bg-gradient-primary-intense"></div>
+                    <span className="text-gradient-primary text-sm font-bold uppercase tracking-wider">
+                      Introduction
+                    </span>
+                  </div>
+                  <blockquote className="text-lg leading-relaxed text-gray-700">
+                    &ldquo;{article.excerpt}&rdquo;
+                  </blockquote>
+                </div>
+                <div className="border-gradient-primary absolute inset-0 rounded-2xl"></div>
               </div>
             </div>
           </header>
