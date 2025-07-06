@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react'
 
-import { InterviewComment, InterviewSpeaker } from './interview-comment'
+import {
+  InterviewComment,
+  InterviewSpeaker,
+} from '@/components/interview-comment'
 
 describe('InterviewComment', () => {
   it('renders interviewer comment correctly', () => {

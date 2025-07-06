@@ -18,7 +18,7 @@ import {
   getArticlesByIndustry,
   getAllTags,
   getAllIndustries,
-} from './mdx'
+} from '@/lib/mdx'
 
 // Type the mocked fs functions properly
 const mockFs = {

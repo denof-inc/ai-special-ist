@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 
-import MDXComponents from './mdx-components'
+import MDXComponents from '@/components/mdx-components'
 
 describe('MDXComponents', () => {
   it('renders custom table component', () => {

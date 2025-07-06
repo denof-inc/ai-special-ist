@@ -5,7 +5,7 @@ import {
   INTERVIEW_CATEGORIES,
   STANDARD_QUESTIONS,
   type InterviewTemplateData,
-} from './interview-template'
+} from '@/components/interview-template'
 
 const mockData: InterviewTemplateData = {
   title: 'テストインタビュー',

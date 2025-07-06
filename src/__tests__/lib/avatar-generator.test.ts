@@ -5,7 +5,7 @@ import {
   generateUnsplashAvatar,
   getPersonAvatar,
   type PersonInfo,
-} from './avatar-generator'
+} from '@/lib/avatar-generator'
 
 describe('Avatar Generator', () => {
   const mockPerson: PersonInfo = {

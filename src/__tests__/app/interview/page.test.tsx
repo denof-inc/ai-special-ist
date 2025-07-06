@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react'
 
+import InterviewPage from '@/app/interview/page'
 import { getAllInterviewArticles } from '@/lib/mdx'
-
-import InterviewPage from './page'
 
 // Mock dependencies
 jest.mock('@/lib/mdx', () => ({

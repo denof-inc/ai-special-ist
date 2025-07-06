@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 
-import InterviewLayout from './layout'
+import InterviewLayout from '@/app/interview/layout'
 
 describe('InterviewLayout', () => {
   it('renders layout with children', () => {
