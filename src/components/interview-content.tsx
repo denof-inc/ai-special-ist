@@ -25,11 +25,11 @@ export function InterviewContent({
 
         // Check if it's an interviewer question (contains ──)
         if (text.includes('──')) {
-          p.classList.add('question-paragraph')
+          p.classList.add('interview-question')
         }
         // Check if it's an interviewee response (contains さん：)
         else if (text.includes('さん：')) {
-          p.classList.add('response-paragraph')
+          p.classList.add('interview-response')
         }
       })
     }

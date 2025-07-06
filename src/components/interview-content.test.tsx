@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 
 import { InterviewContent } from './interview-content'
 
@@ -118,5 +118,83 @@ describe('InterviewContent', () => {
     expect(screen.getByText(/複雑な質問ですが/)).toBeInTheDocument()
     expect(screen.getByText(/まず第一に/)).toBeInTheDocument()
     expect(screen.getByText('技術的な検討')).toBeInTheDocument()
+  })
+
+  it('applies interview-question class to paragraphs with ── pattern', async () => {
+    const { container } = render(
+      <InterviewContent>
+        <p>
+          <strong>──インタビュアー</strong> 質問内容です。
+        </p>
+        <p>Normal paragraph</p>
+      </InterviewContent>
+    )
+
+    await waitFor(() => {
+      const questionParagraph = container.querySelector('p')
+      expect(questionParagraph).toHaveClass('interview-question')
+    })
+  })
+
+  it('applies interview-response class to paragraphs with さん： pattern', async () => {
+    const { container } = render(
+      <InterviewContent>
+        <p>
+          <strong>田中さん：</strong> 回答内容です。
+        </p>
+        <p>Normal paragraph</p>
+      </InterviewContent>
+    )
+
+    await waitFor(() => {
+      const responseParagraph = container.querySelector('p')
+      expect(responseParagraph).toHaveClass('interview-response')
+    })
+  })
+
+  it('does not apply special classes to paragraphs without pattern', async () => {
+    const { container } = render(
+      <InterviewContent>
+        <p>
+          <strong>普通のテキスト</strong> 内容です。
+        </p>
+      </InterviewContent>
+    )
+
+    await waitFor(() => {
+      const paragraph = container.querySelector('p')
+      expect(paragraph).not.toHaveClass('interview-question')
+      expect(paragraph).not.toHaveClass('interview-response')
+    })
+  })
+
+  it('handles paragraphs without strong elements', async () => {
+    const { container } = render(
+      <InterviewContent>
+        <p>Plain paragraph without strong element</p>
+      </InterviewContent>
+    )
+
+    await waitFor(() => {
+      const paragraph = container.querySelector('p')
+      expect(paragraph).not.toHaveClass('interview-question')
+      expect(paragraph).not.toHaveClass('interview-response')
+    })
+  })
+
+  it('handles content with no interview-content container', async () => {
+    // Test for the early return when content is not found
+    const { container } = render(
+      <div>
+        <p>
+          <strong>──インタビュアー</strong> 質問内容です。
+        </p>
+      </div>
+    )
+
+    await waitFor(() => {
+      const paragraph = container.querySelector('p')
+      expect(paragraph).not.toHaveClass('interview-question')
+    })
   })
 })
