@@ -1,41 +1,57 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import {
+  earlyAccessSchema,
+  type EarlyAccessFormData,
+} from '@/lib/validations/early-access'
 
 export default function Subscribe(): JSX.Element {
-  const [email, setEmail] = useState('')
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EarlyAccessFormData>({
+    resolver: zodResolver(earlyAccessSchema),
+  })
+
+  const onSubmit = async (data: EarlyAccessFormData): Promise<void> => {
     setIsSubmitting(true)
+    setSubmitError(null)
 
-    // TODO: 実際のAPI連携を実装
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      const response = await fetch('/api/early-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
 
-    setIsSubmitted(true)
-    setIsSubmitting(false)
-  }
+      const result = await response.json()
 
-  if (isSubmitted) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="mx-auto max-w-md px-4 text-center">
-          <div className="rounded-lg bg-white p-8 shadow-lg">
-            <div className="mb-4 text-5xl text-green-600">✓</div>
-            <h1 className="mb-4 text-2xl font-bold text-gray-900">
-              ご登録ありがとうございます
-            </h1>
-            <p className="mb-6 text-gray-600">最新情報をお送りいたします。</p>
-            <Link href="/" className="btn-gradient-accent">
-              ホームに戻る
-            </Link>
-          </div>
-        </div>
-      </main>
-    )
+      if (!response.ok) {
+        throw new Error(result.message || '登録に失敗しました')
+      }
+
+      // 成功時は完了画面に遷移
+      router.push('/early-access/success')
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : '登録に失敗しました'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -107,7 +123,13 @@ export default function Subscribe(): JSX.Element {
               無料で先行登録
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {submitError && (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                <p className="text-sm text-red-700">{submitError}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label
                   htmlFor="email"
@@ -118,11 +140,48 @@ export default function Subscribe(): JSX.Element {
                 <input
                   type="email"
                   id="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-600"
+                  {...register('email')}
+                  className={`w-full rounded-lg border px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-600 ${
+                    errors.email ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   placeholder="your@email.com"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  お名前（任意）
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  {...register('name')}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-600"
+                  placeholder="田中太郎"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  メッセージ（任意）
+                </label>
+                <textarea
+                  id="message"
+                  {...register('message')}
+                  rows={3}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-600"
+                  placeholder="AIについてお聞きしたいことがあれば..."
                 />
               </div>
 
