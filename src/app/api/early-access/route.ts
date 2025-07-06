@@ -67,7 +67,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         },
       })
     } catch (dbError) {
-      if (dbError instanceof Error && dbError.message.includes('Unique constraint')) {
+      if (
+        dbError instanceof Error &&
+        dbError.message.includes('Unique constraint')
+      ) {
         return NextResponse.json(
           {
             success: false,
@@ -76,12 +79,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           { status: 409 }
         )
       }
-      
+
       logger.error('Database error during registration', dbError)
       return NextResponse.json(
         {
           success: false,
-          message: 'データベースエラーが発生しました。しばらく時間をおいて再度お試しください。',
+          message:
+            'データベースエラーが発生しました。しばらく時間をおいて再度お試しください。',
         },
         { status: 500 }
       )
@@ -124,7 +128,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        message: '予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。',
+        message:
+          '予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。',
       },
       { status: 500 }
     )
