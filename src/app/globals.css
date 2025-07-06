@@ -10,19 +10,19 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 217.2 91.2% 59.8%; /* SHIFT AI Blue - #3B82F6 */
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45.4 93.4% 64.7%; /* Benesse Yellow - #FDE047 */
+    --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 217.2 91.2% 59.8%;
     --radius: 0.5rem;
   }
 
@@ -33,19 +33,19 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 217.2 91.2% 59.8%; /* SHIFT AI Blue - #3B82F6 */
+    --primary-foreground: 210 40% 98%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45.4 93.4% 64.7%; /* Benesse Yellow - #FDE047 */
+    --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -58,12 +58,34 @@
   }
 }
 
-/* Interview article specific styles - Responsive optimized */
+/* Interview article specific styles - Responsive optimized with rich background */
 .interview-content {
   line-height: 1.8;
   max-width: none;
   margin: 0 auto;
   padding: 0 1rem;
+  position: relative;
+}
+
+.interview-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -2rem;
+  right: -2rem;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(236, 72, 153, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.02) 0%, transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(255, 255, 255, 0.005) 60px,
+      rgba(255, 255, 255, 0.005) 120px
+    );
+  pointer-events: none;
+  z-index: -1;
 }
 
 @media (min-width: 768px) {
@@ -80,19 +102,24 @@
 }
 
 .interview-content h1 {
-  @apply mb-8 mt-12 text-3xl font-bold leading-tight;
+  @apply text-gradient-primary mb-8 mt-12 text-4xl font-bold leading-tight;
   margin-top: 3rem;
 }
 
 .interview-content h2 {
-  @apply mb-6 mt-12 text-2xl font-bold leading-tight;
+  @apply text-gradient-primary mb-6 mt-12 text-3xl font-bold leading-tight;
   margin-top: 3rem;
-  border-bottom: 2px solid hsl(var(--border));
-  padding-bottom: 0.5rem;
+  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%) 1;
 }
 
 .interview-content h3 {
-  @apply mb-4 mt-8 text-xl font-semibold;
+  @apply text-gradient-accent mb-4 mt-8 text-2xl font-semibold;
   margin-top: 2rem;
 }
 
@@ -161,36 +188,69 @@
   @apply bg-slate-100;
 }
 
-/* Interview conversation styles - Enhanced with responsive design */
+/* Premium Interview conversation styles with gradients */
 .interview-question {
-  @apply mb-6 rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 shadow-sm transition-all duration-200 hover:shadow-md;
+  @apply card-gradient-primary mb-8 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-2xl;
+  position: relative;
+  overflow: hidden;
+}
+
+.interview-question::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  @apply border-gradient-primary rounded-2xl;
 }
 
 .interview-question strong {
-  @apply flex flex-wrap items-center gap-2 font-semibold text-blue-700;
+  @apply text-gradient-primary flex flex-wrap items-center gap-3 text-lg font-bold;
+  position: relative;
+  z-index: 10;
 }
 
 .interview-question strong::before {
   content: 'Q';
-  @apply flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white;
+  @apply flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-primary text-sm font-bold text-white;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
 }
 
 .interview-response {
-  @apply mb-6 rounded-lg border-l-4 border-green-500 bg-green-50 p-4 shadow-sm transition-all duration-200 hover:shadow-md;
+  @apply card-gradient-accent mb-8 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-2xl;
+  position: relative;
+  overflow: hidden;
+}
+
+.interview-response::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  @apply border-gradient-accent rounded-2xl;
 }
 
 .interview-response strong {
-  @apply flex flex-wrap items-center gap-2 font-semibold text-green-700;
+  @apply text-gradient-accent flex flex-wrap items-center gap-3 text-lg font-bold;
+  position: relative;
+  z-index: 10;
 }
 
 .interview-response strong::before {
   content: 'A';
-  @apply flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white;
+  @apply flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-accent text-sm font-bold text-white;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
 .interview-content img {
-  @apply my-8 rounded-xl shadow-lg;
+  @apply my-8 rounded-xl shadow-lg transition-transform duration-300 hover:scale-105;
   margin: 2rem 0;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.interview-content img:hover {
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Interview Q&A styling */
@@ -270,4 +330,195 @@
   @apply inline-flex items-center gap-2 rounded-lg bg-primary px-6 
          py-3 font-semibold text-primary-foreground 
          transition-colors duration-200 hover:bg-primary/90;
+}
+
+/* Premium Gradient System */
+@layer utilities {
+  /* Primary gradient components */
+  .gradient-primary-bg {
+    @apply bg-gradient-primary text-white;
+  }
+
+  .gradient-primary-subtle-bg {
+    @apply bg-gradient-primary-subtle;
+  }
+
+  .gradient-primary-intense-bg {
+    @apply bg-gradient-primary-intense text-white;
+  }
+
+  /* Accent gradient components */
+  .gradient-accent-bg {
+    @apply bg-gradient-accent text-white;
+  }
+
+  .gradient-accent-subtle-bg {
+    @apply bg-gradient-accent-subtle;
+  }
+
+  .gradient-accent-intense-bg {
+    @apply bg-gradient-accent-intense text-white;
+  }
+
+  /* Hero section with triple layer */
+  .hero-premium {
+    background: linear-gradient(
+      135deg,
+      #ec4899 0%,
+      #c084fc 50%,
+      #8b5cf6 100%
+    );
+    position: relative;
+  }
+
+  .hero-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      ellipse at top,
+      rgba(236, 72, 153, 0.2) 0%,
+      rgba(139, 92, 246, 0.1) 50%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .hero-premium::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      rgba(236, 72, 153, 0.08) 120deg,
+      transparent 180deg,
+      rgba(139, 92, 246, 0.08) 240deg,
+      transparent 360deg
+    );
+    pointer-events: none;
+  }
+
+  /* Dynamic gradient text */
+  .text-gradient-primary {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
+
+  .text-gradient-primary-intense {
+    @apply bg-gradient-primary-intense bg-clip-text text-transparent;
+  }
+
+  .text-gradient-accent {
+    @apply bg-gradient-accent bg-clip-text text-transparent;
+  }
+
+  .text-gradient-accent-intense {
+    @apply bg-gradient-accent-intense bg-clip-text text-transparent;
+  }
+
+  .text-gradient-dynamic {
+    @apply bg-gradient-dynamic bg-clip-text text-transparent;
+  }
+
+  /* Interactive gradient cards */
+  .card-gradient-primary {
+    @apply border border-white/20 bg-gradient-card-primary backdrop-blur-sm;
+    transition: all 0.3s ease;
+  }
+
+  .card-gradient-primary:hover {
+    @apply bg-gradient-primary-subtle shadow-2xl;
+    transform: translateY(-2px);
+  }
+
+  .card-gradient-accent {
+    @apply border border-white/20 bg-gradient-card-accent backdrop-blur-sm;
+    transition: all 0.3s ease;
+  }
+
+  .card-gradient-accent:hover {
+    @apply bg-gradient-accent-subtle shadow-2xl;
+    transform: translateY(-2px);
+  }
+
+  /* Gradient borders */
+  .border-gradient-primary {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(135deg, #fdf2f8, #ede9fe) padding-box,
+      linear-gradient(135deg, #ec4899, #8b5cf6) border-box;
+  }
+
+  .border-gradient-accent {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(135deg, #eff6ff, #dbeafe) padding-box,
+      linear-gradient(135deg, #2563eb, #60a5fa) border-box;
+  }
+
+  /* Premium button effects with enhanced shadows */
+  .btn-gradient-primary {
+    @apply rounded-lg bg-gradient-primary px-6 py-3 font-semibold text-white;
+    transition: all 0.3s ease;
+    box-shadow: 
+      0 4px 15px rgba(236, 72, 153, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-gradient-primary:hover {
+    @apply bg-gradient-primary-intense;
+    box-shadow: 
+      0 8px 25px rgba(236, 72, 153, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .btn-gradient-accent {
+    @apply rounded-lg bg-gradient-accent px-6 py-3 font-semibold text-white;
+    transition: all 0.3s ease;
+    box-shadow: 
+      0 4px 15px rgba(37, 99, 235, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-gradient-accent:hover {
+    @apply bg-gradient-accent-intense;
+    box-shadow: 
+      0 8px 25px rgba(37, 99, 235, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .btn-gradient-dynamic {
+    @apply rounded-lg bg-gradient-dynamic px-6 py-3 font-semibold text-white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+  }
+
+  .btn-gradient-dynamic:hover {
+    @apply bg-gradient-dynamic-hover;
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.5);
+    transform: translateY(-2px);
+  }
+
+  /* Enhanced rich backgrounds for luxury feel */
+  .bg-rich-texture {
+    background: 
+      radial-gradient(ellipse at top left, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 60px,
+        rgba(255, 255, 255, 0.008) 60px,
+        rgba(255, 255, 255, 0.008) 120px
+      ),
+      linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
 }

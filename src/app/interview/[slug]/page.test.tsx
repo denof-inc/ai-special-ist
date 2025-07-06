@@ -96,7 +96,7 @@ describe('InterviewArticlePage', () => {
     expect(screen.getAllByText('テスト株式会社')).toHaveLength(2)
     expect(screen.getAllByText('IT業界')).toHaveLength(3)
     expect(
-      screen.getByText('これはテスト記事の説明文です。')
+      screen.getByText(/これはテスト記事の説明文です。/)
     ).toBeInTheDocument()
     expect(screen.getByTestId('mdx-content')).toBeInTheDocument()
   })

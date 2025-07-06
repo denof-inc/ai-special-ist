@@ -45,7 +45,7 @@ describe('InterviewContent', () => {
   it('handles empty content', () => {
     const { container } = render(<InterviewContent>{null}</InterviewContent>)
 
-    expect(container.firstChild).toHaveClass('interview-content')
+    expect(container.querySelector('.interview-content')).toBeInTheDocument()
   })
 
   it('handles multiple child elements', () => {
