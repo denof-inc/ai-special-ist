@@ -5,6 +5,9 @@ import { NextRequest } from 'next/server'
 
 import { POST } from '@/app/api/early-access/route'
 
+// Set environment variable for tests
+process.env.RESEND_API_KEY = 'test-key'
+
 // Mock modules
 jest.mock('@/lib/prisma', () => ({
   prisma: {
@@ -26,8 +29,13 @@ jest.mock('@/lib/logger', () => ({
   },
 }))
 
-// Set environment variable for tests
-process.env.RESEND_API_KEY = 'test-key'
+// Mock crypto.randomUUID
+const mockRandomUUID = jest.fn(() => 'mocked-uuid')
+Object.defineProperty(global, 'crypto', {
+  value: {
+    randomUUID: mockRandomUUID,
+  },
+})
 
 describe('/api/early-access', () => {
   beforeEach(() => {
@@ -116,7 +124,7 @@ describe('/api/early-access', () => {
         utmCampaign: null,
         ipAddress: 'unknown',
         userAgent: 'unknown',
-        unsubscribeToken: expect.any(String),
+        unsubscribeToken: 'mocked-uuid',
       },
     })
     expect(sendWelcomeEmail).toHaveBeenCalledWith(
