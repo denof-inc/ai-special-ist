@@ -114,11 +114,12 @@ AI運用5原則
 2. **ローカル品質チェック必須**: コミット・プッシュ前に必ず実行
 
    ```bash
-   npm run quality:check  # lint + type-check + format:check + test:ci
+   pnpm run quality:check  # lint + type-check + format:check + test:ci
    ```
 
    - 全てパスしてからコミットすること
    - これによりリモートCI失敗を防ぐ
+   - **絶対に守ること**: ローカルでパスしない限りコミット・プッシュ禁止
 
 3. **コミットを作成する**: 変更内容を明確に記述
 
