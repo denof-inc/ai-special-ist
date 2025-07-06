@@ -1,6 +1,6 @@
 /**
  * 強力なLoggerクラス - 運用・デバッグ対応
- * 
+ *
  * 設計方針:
  * - 構造化ログ（JSON形式）
  * - 環境別出力制御
@@ -94,23 +94,29 @@ class LoggerClass {
   private formatConsoleOutput(entry: LogEntry): void {
     const { timestamp, level, message, context, error } = entry
     const time = new Date(timestamp).toLocaleTimeString()
-    
+
     const levelColors = {
       debug: '\x1b[36m', // cyan
-      info: '\x1b[32m',  // green
-      warn: '\x1b[33m',  // yellow
+      info: '\x1b[32m', // green
+      warn: '\x1b[33m', // yellow
       error: '\x1b[31m', // red
       fatal: '\x1b[35m', // magenta
     }
-    
+
     const reset = '\x1b[0m'
     const color = levelColors[level]
-    
-    const contextStr = context ? ` [${Object.entries(context).map(([k, v]) => `${k}:${v}`).join(', ')}]` : ''
-    
+
+    const contextStr = context
+      ? ` [${Object.entries(context)
+          .map(([k, v]) => `${k}:${v}`)
+          .join(', ')}]`
+      : ''
+
     // eslint-disable-next-line no-console
-    console.log(`${color}${time} [${level.toUpperCase()}]${reset} ${message}${contextStr}`)
-    
+    console.log(
+      `${color}${time} [${level.toUpperCase()}]${reset} ${message}${contextStr}`
+    )
+
     if (error?.stack && this.config.environment === 'development') {
       // eslint-disable-next-line no-console
       console.error(error.stack)
@@ -134,7 +140,7 @@ class LoggerClass {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(entry),
-        }).catch((error) => {
+        }).catch(error => {
           // eslint-disable-next-line no-console
           console.error('Failed to send remote log:', error)
         })
@@ -146,7 +152,12 @@ class LoggerClass {
   }
 
   // メインログメソッド
-  private log(level: LogLevel, message: string, context?: LogContext, error?: Error): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    context?: LogContext,
+    error?: Error
+  ): void {
     if (!this.shouldLog(level)) return
 
     const entry = this.createLogEntry(level, message, context, error)

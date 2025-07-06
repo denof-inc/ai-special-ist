@@ -51,9 +51,9 @@ logger.performance('database_query', duration, { query: 'SELECT * FROM users' })
 ### ユーザーアクション追跡
 
 ```typescript
-logger.userAction('login', 'user123', { 
+logger.userAction('login', 'user123', {
   component: 'AuthComponent',
-  method: 'email' 
+  method: 'email',
 })
 ```
 
@@ -61,9 +61,9 @@ logger.userAction('login', 'user123', {
 
 ```typescript
 // React Error Boundary内
-logger.captureException(error, { 
+logger.captureException(error, {
   component: 'UserProfile',
-  props: { userId: 'user123' }
+  props: { userId: 'user123' },
 })
 ```
 
@@ -80,8 +80,8 @@ const context = {
   metadata: {
     amount: 1000,
     currency: 'JPY',
-    paymentMethod: 'credit_card'
-  }
+    paymentMethod: 'credit_card',
+  },
 }
 
 logger.info('決済処理を開始', context)
@@ -132,7 +132,7 @@ const prodLogger = new LoggerClass({
   enableConsole: true,
   enableJson: true, // JSON形式で構造化
   enableRemote: true,
-  remoteEndpoint: 'https://logs.example.com/api'
+  remoteEndpoint: 'https://logs.example.com/api',
 })
 ```
 
@@ -146,14 +146,14 @@ import { logger } from '@/lib/logger'
 
 export async function GET(request: Request) {
   const requestId = crypto.randomUUID()
-  
+
   logger.request('GET', '/api/users', { requestId })
-  
+
   try {
     const users = await fetchUsers()
-    logger.info('ユーザー一覧を取得しました', { 
+    logger.info('ユーザー一覧を取得しました', {
       requestId,
-      count: users.length 
+      count: users.length,
     })
     return Response.json(users)
   } catch (error) {
@@ -180,17 +180,17 @@ export function UserProfile({ userId }: { userId: string }) {
 
   const handleAction = async () => {
     try {
-      logger.userAction('profile_update', userId, { 
-        component: 'UserProfile' 
+      logger.userAction('profile_update', userId, {
+        component: 'UserProfile'
       })
-      
+
       await updateProfile()
-      
+
       logger.info('プロフィール更新完了', { userId })
     } catch (error) {
-      logger.error('プロフィール更新に失敗', error, { 
+      logger.error('プロフィール更新に失敗', error, {
         userId,
-        component: 'UserProfile' 
+        component: 'UserProfile'
       })
     }
   }
@@ -280,7 +280,7 @@ logger.info('注文処理完了', {
   orderId: 'order_123',
   userId: 'user_456',
   amount: 1500,
-  status: 'completed'
+  status: 'completed',
 })
 
 // Bad: 文字列に全て含める
@@ -296,7 +296,7 @@ try {
   // エラーオブジェクトと追加コンテキストを含める
   logger.error('リスクのある操作が失敗', error, {
     operation: 'riskyOperation',
-    retryCount: 3
+    retryCount: 3,
   })
   throw error // 必要に応じて再スロー
 }
@@ -310,7 +310,7 @@ try {
 
 // 本番環境では debug レベルを無効にする
 const logger = new LoggerClass({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug'
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
 })
 ```
 
@@ -322,7 +322,7 @@ const logger = new LoggerClass({
 const logger = new LoggerClass({
   level: 'info',
   enableRemote: true,
-  remoteEndpoint: 'https://sentry.io/api/your-project/logs'
+  remoteEndpoint: 'https://sentry.io/api/your-project/logs',
 })
 ```
 

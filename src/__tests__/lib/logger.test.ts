@@ -52,7 +52,10 @@ describe('Logger', () => {
     })
 
     it('logs debug level when level is debug', () => {
-      const testLogger = new LoggerClass({ level: 'debug', enableConsole: true })
+      const testLogger = new LoggerClass({
+        level: 'debug',
+        enableConsole: true,
+      })
 
       testLogger.debug('debug message')
       expect(mockConsoleLog).toHaveBeenCalledTimes(1)
@@ -175,7 +178,9 @@ describe('Logger', () => {
     })
 
     it('logs performance metrics', () => {
-      testLogger.performance('database_query', 150, { component: 'UserService' })
+      testLogger.performance('database_query', 150, {
+        component: 'UserService',
+      })
 
       const logCall = mockConsoleLog.mock.calls[0][0]
       const parsedLog = JSON.parse(logCall)
@@ -222,7 +227,7 @@ describe('Logger', () => {
       testLogger.info('remote log test')
 
       // 非同期処理なので少し待つ
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://logs.example.com/api',
@@ -246,7 +251,7 @@ describe('Logger', () => {
 
       testLogger.info('test message')
 
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await new Promise(resolve => setTimeout(resolve, 0))
 
       // エラーが発生してもログ処理は継続される
       expect(mockConsoleError).toHaveBeenCalledWith(
