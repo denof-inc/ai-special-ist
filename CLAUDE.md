@@ -160,6 +160,7 @@ Closes #14
 ### コード重複監視
 
 **similarity-ts定期チェック:**
+
 - **頻度**: 月1回以上
 - **実行コマンド**: `similarity-ts .` (要Rust環境)
 - **対象**: TypeScript/JSファイルの構造的重複
