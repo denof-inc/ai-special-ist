@@ -1,15 +1,27 @@
 import { Resend } from 'resend'
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not defined')
+// ビルド時は警告のみ、実行時にエラーチェック
+let resendInstance: Resend | null = null
+
+if (process.env.RESEND_API_KEY) {
+  resendInstance = new Resend(process.env.RESEND_API_KEY)
+} else {
+  // eslint-disable-next-line no-console
+  console.warn(
+    'RESEND_API_KEY is not defined. Email functionality will be disabled.'
+  )
 }
 
-export const resend = new Resend(process.env.RESEND_API_KEY)
+export const resend = resendInstance
 
 export async function sendWelcomeEmail(
   email: string,
   name?: string
 ): Promise<{ id: string } | null> {
+  if (!resend) {
+    throw new Error('RESEND_API_KEY is not defined. Cannot send email.')
+  }
+
   const { data, error } = await resend.emails.send({
     from: 'AIスペシャリスト.com <noreply@aispecialist.com>',
     to: [email],
