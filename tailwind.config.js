@@ -64,31 +64,6 @@ module.exports = {
           800: '#9D174D',
           900: '#831843',
         },
-        accent: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          800: '#1E40AF',
-          900: '#1E3A8A',
-        },
-        // New secondary color palette - Purple/Orange blend
-        secondary: {
-          50: '#F3E8FF',
-          100: '#E9D5FF',
-          200: '#D8B4FE',
-          300: '#C084FC',
-          400: '#A855F7',
-          500: '#9333EA',
-          600: '#7C3AED',
-          700: '#6D28D9',
-          800: '#5B21B6',
-          900: '#4C1D95',
-        },
         // Orange/Coral complement
         tertiary: {
           50: '#FFF7ED',
@@ -134,7 +109,8 @@ module.exports = {
           'conic-gradient(from 0deg at 50% 50%, #EC4899 0deg, #C084FC 120deg, #8B5CF6 240deg, #EC4899 360deg)',
 
         // Dynamic gradients for interactive elements
-        'gradient-dynamic': 'linear-gradient(135deg, #EC4899 0%, #C084FC 50%, #8B5CF6 100%)',
+        'gradient-dynamic':
+          'linear-gradient(135deg, #EC4899 0%, #C084FC 50%, #8B5CF6 100%)',
         'gradient-dynamic-hover':
           'linear-gradient(135deg, #DB2777 0%, #A855F7 50%, #7C3AED 100%)',
 
@@ -149,7 +125,7 @@ module.exports = {
           'linear-gradient(135deg, #EC4899 0%, #C084FC 33%, #8B5CF6 66%, #60A5FA 100%)',
         'gradient-glass':
           'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-        
+
         // Rich background patterns
         'gradient-rich-dark':
           'radial-gradient(ellipse at top left, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.1) 0%, transparent 50%), linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',

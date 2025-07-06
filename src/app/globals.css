@@ -74,9 +74,17 @@
   left: -2rem;
   right: -2rem;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 25% 25%, rgba(236, 72, 153, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.02) 0%, transparent 50%),
+  background:
+    radial-gradient(
+      circle at 25% 25%,
+      rgba(236, 72, 153, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(139, 92, 246, 0.02) 0%,
+      transparent 50%
+    ),
     repeating-linear-gradient(
       45deg,
       transparent,
@@ -362,12 +370,7 @@
 
   /* Hero section with triple layer */
   .hero-premium {
-    background: linear-gradient(
-      135deg,
-      #ec4899 0%,
-      #c084fc 50%,
-      #8b5cf6 100%
-    );
+    background: linear-gradient(135deg, #ec4899 0%, #c084fc 50%, #8b5cf6 100%);
     position: relative;
   }
 
@@ -466,14 +469,14 @@
   .btn-gradient-primary {
     @apply rounded-lg bg-gradient-primary px-6 py-3 font-semibold text-white;
     transition: all 0.3s ease;
-    box-shadow: 
+    box-shadow:
       0 4px 15px rgba(236, 72, 153, 0.3),
       0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
   .btn-gradient-primary:hover {
     @apply bg-gradient-primary-intense;
-    box-shadow: 
+    box-shadow:
       0 8px 25px rgba(236, 72, 153, 0.4),
       0 0 0 1px rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
@@ -482,14 +485,14 @@
   .btn-gradient-accent {
     @apply rounded-lg bg-gradient-accent px-6 py-3 font-semibold text-white;
     transition: all 0.3s ease;
-    box-shadow: 
+    box-shadow:
       0 4px 15px rgba(37, 99, 235, 0.3),
       0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
   .btn-gradient-accent:hover {
     @apply bg-gradient-accent-intense;
-    box-shadow: 
+    box-shadow:
       0 8px 25px rgba(37, 99, 235, 0.5),
       0 0 0 1px rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
@@ -509,9 +512,17 @@
 
   /* Enhanced rich backgrounds for luxury feel */
   .bg-rich-texture {
-    background: 
-      radial-gradient(ellipse at top left, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    background:
+      radial-gradient(
+        ellipse at top left,
+        rgba(236, 72, 153, 0.15) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at bottom right,
+        rgba(139, 92, 246, 0.1) 0%,
+        transparent 50%
+      ),
       repeating-linear-gradient(
         45deg,
         transparent,
