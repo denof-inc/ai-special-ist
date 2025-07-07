@@ -1,28 +1,46 @@
-import { Resend } from 'resend'
+// 動的インポートでビルド時エラーを防ぐ
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let resendInstance: any = null
+let resendInitialized = false
 
-// ビルド時は警告のみ、実行時にエラーチェック
-let resendInstance: Resend | null = null
-
-if (process.env.RESEND_API_KEY) {
-  resendInstance = new Resend(process.env.RESEND_API_KEY)
-} else {
-  // eslint-disable-next-line no-console
-  console.warn(
-    'RESEND_API_KEY is not defined. Email functionality will be disabled.'
-  )
+// 実行時のみResendを初期化
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function getResendInstance() {
+  if (!resendInitialized && typeof window === 'undefined') {
+    resendInitialized = true
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const { Resend } = require('resend')
+        resendInstance = new Resend(process.env.RESEND_API_KEY)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to load Resend:', error)
+        resendInstance = null
+      }
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'RESEND_API_KEY is not defined. Email functionality will be disabled.'
+      )
+      resendInstance = null
+    }
+  }
+  return resendInstance
 }
 
-export const resend = resendInstance
+// ビルド時は何も返さない
+export const resend = typeof window === 'undefined' ? getResendInstance() : null
 
 export async function sendWelcomeEmail(
   email: string,
   name?: string
 ): Promise<{ id: string } | null> {
-  if (!resend) {
+  const resendClient = getResendInstance()
+  if (!resendClient) {
     throw new Error('RESEND_API_KEY is not defined. Cannot send email.')
   }
 
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await resendClient.emails.send({
     from: 'AIスペシャリスト.com <noreply@aispecialist.com>',
     to: [email],
     subject: '【AIスペシャリスト.com】先行登録ありがとうございます！',
