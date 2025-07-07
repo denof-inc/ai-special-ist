@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm run build",
+  "buildCommand": "prisma generate && pnpm run build",
   "devCommand": "pnpm run dev",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": "nextjs",
@@ -15,11 +15,6 @@
     "NEXT_PUBLIC_APP_URL": "@next_public_app_url",
     "DATABASE_URL": "@database_url",
     "RESEND_API_KEY": "@resend_api_key"
-  },
-  "build": {
-    "env": {
-      "PRISMA_GENERATE_SKIP_AUTOINSTALL": "true"
-    }
   },
   "rewrites": [
     {
