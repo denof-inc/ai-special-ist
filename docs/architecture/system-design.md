@@ -317,4 +317,43 @@ Application Data → Code Repository → GitHub Backup
 
 ---
 
+## 早期登録機能の技術選定
+
+### 選定技術とその理由
+
+**フォーム処理系**
+
+- **React Hook Form**: パフォーマンス重視でReactコンポーネントの再レンダリングを最小化
+- **Zod**: TypeScriptファーストなスキーマバリデーション、型安全性確保
+
+**メール送信**
+
+- **Resend**: Next.jsエコシステムとの親和性、開発者体験とAPI仕様の明確さ
+
+**データベース**
+
+- **Prisma**: 既存ORM、型安全性とスキーママイグレーション管理
+
+### 実装範囲
+
+```
+早期登録フロー
+├── フォームバリデーション (React Hook Form + Zod)
+├── データベース保存 (Prisma)
+├── 自動返信メール (Resend)
+├── 成功画面遷移 (Next.js Router)
+└── エラーハンドリング (統一エラー処理)
+```
+
+### 関連ファイル
+
+- `/src/app/early-access/page.tsx`: 登録フォームUI
+- `/src/app/early-access/success/page.tsx`: 成功ページ
+- `/src/app/api/early-access/route.ts`: API エンドポイント
+- `/src/lib/validations/early-access.ts`: バリデーションスキーマ
+- `/src/lib/email.ts`: メール送信サービス
+- `/prisma/schema.prisma`: データベーススキーマ
+
+---
+
 **このシステム設計は段階的に進化します。各フェーズで必要な部分から実装し、将来の拡張性を確保しながら開発を進めてください。**
