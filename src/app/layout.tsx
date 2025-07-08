@@ -7,6 +7,21 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'AIスペシャリスト.com',
   description: '企業向けAI導入支援プラットフォーム',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  ),
+  openGraph: {
+    title: 'AIスペシャリスト.com',
+    description: '企業向けAI導入支援プラットフォーム',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    siteName: 'AIスペシャリスト.com',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AIスペシャリスト.com',
+    description: '企業向けAI導入支援プラットフォーム',
+  },
 }
 
 export default function RootLayout({

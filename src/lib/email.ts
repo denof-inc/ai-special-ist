@@ -1,41 +1,68 @@
-// 動的インポートでビルド時エラーを防ぐ
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let resendInstance: any = null
-let resendInitialized = false
-
-// 実行時のみResendを初期化
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function getResendInstance() {
-  if (!resendInitialized && typeof window === 'undefined') {
-    resendInitialized = true
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const { Resend } = require('resend')
-        resendInstance = new Resend(process.env.RESEND_API_KEY)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn('Failed to load Resend:', error)
-        resendInstance = null
-      }
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(
-        'RESEND_API_KEY is not defined. Email functionality will be disabled.'
-      )
-      resendInstance = null
-    }
-  }
-  return resendInstance
+// Vercel用の完全な動的インポート実装
+type EmailSendParams = {
+  from: string
+  to: string[]
+  subject: string
+  html: string
 }
 
-// ビルド時は何も返さない
-export const resend = typeof window === 'undefined' ? getResendInstance() : null
+type EmailSendResponse = {
+  data?: { id: string }
+  error?: { message: string }
+}
+
+type ResendInstance = {
+  emails: {
+    send: (params: EmailSendParams) => Promise<EmailSendResponse>
+  }
+}
+
+let resendInstance: ResendInstance | null = null
+let resendInitialized = false
+
+// サーバーサイドでのみResendを動的にロード
+async function initializeResend(): Promise<ResendInstance | null> {
+  if (resendInitialized) {
+    return resendInstance
+  }
+
+  resendInitialized = true
+
+  // クライアントサイドでは何もしない
+  if (typeof window !== 'undefined') {
+    return null
+  }
+
+  // 環境変数チェック
+  if (!process.env.RESEND_API_KEY) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      'RESEND_API_KEY is not defined. Email functionality will be disabled.'
+    )
+    return null
+  }
+
+  try {
+    // 動的インポートでResendをロード
+    const ResendModule = await import('resend')
+    const Resend = ResendModule.Resend
+    resendInstance = new Resend(process.env.RESEND_API_KEY)
+    return resendInstance
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('Failed to load Resend:', error)
+    return null
+  }
+}
+
+// ビルド時は未初期化の状態を維持
+export const resend = null
 
 export async function sendWelcomeEmail(
   email: string,
   name?: string
 ): Promise<{ id: string } | null> {
-  const resendClient = getResendInstance()
+  const resendClient = await initializeResend()
   if (!resendClient) {
     throw new Error('RESEND_API_KEY is not defined. Cannot send email.')
   }
